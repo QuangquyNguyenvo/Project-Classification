@@ -26,14 +26,27 @@
         .form-control:hover, .form-control-file:hover {
             transform: scale(1.05);
         }
-        .btn-primary {
+        .btn-custom {
             background-color: #007bff;
+            color: white;
             border: none;
             transition: background-color 0.5s, transform 0.3s ease-in-out;
         }
-        .btn-primary:hover {
+        .btn-custom:hover {
             background-color: #0056b3;
             transform: scale(1.05);
+        }
+        #camera {
+            display: none;
+            margin: 20px auto;
+            width: 640px;
+            height: 480px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+        }
+        #captureBtn {
+            display: none;
+            margin: 20px auto 0;
         }
     </style>
 </head>
@@ -47,8 +60,44 @@
             <div class="form-group mt-3">
                 <input type="text" name="url" class="form-control" placeholder="Hoặc nhập URL của ảnh">
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Tải ảnh lên</button>
+            <button type="submit" class="btn btn-custom mt-3">Tải ảnh lên</button>
         </form>
+        
+        <button id="useWebcam" class="btn btn-custom mt-3">Sử dụng webcam</button>
+        <video id="camera" autoplay></video>
+        <button id="captureBtn" class="btn btn-custom">Chụp ảnh</button>
+        <canvas id="canvas" style="display:none;"></canvas>
     </div>
+
+    <script>
+        document.getElementById('useWebcam').addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.getElementById('camera');
+            video.srcObject = stream;
+            video.style.display = 'block';
+            document.getElementById('captureBtn').style.display = 'block';
+        });
+
+        document.getElementById('captureBtn').addEventListener('click', () => {
+            const video = document.getElementById('camera');
+            const canvas = document.getElementById('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
+                formData.append('webcam_image', blob, 'webcam_image.jpg');
+                fetch('/', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }
+                });
+            }, 'image/jpeg');
+        });
+    </script>
 </body>
 </html>
