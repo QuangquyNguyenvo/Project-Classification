@@ -61,6 +61,17 @@ def index():
             waste_type = determine_waste_type(labels)
             session['waste_type'] = waste_type
             return redirect(url_for('result'))
+        elif 'webcam_image' in request.files:
+            file = request.files['webcam_image']
+            filename = 'webcam_image.jpg'
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            labels, modified_image_path = detect_labels_and_objects(filepath)
+            session['labels'] = [(label.description, label.score) for label in labels]
+            session['image_url'] = modified_image_path
+            waste_type = determine_waste_type(labels)
+            session['waste_type'] = waste_type
+            return redirect(url_for('result'))
     return render_template('index.html')
 
 @app.route('/result')
