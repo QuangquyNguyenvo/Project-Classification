@@ -48,14 +48,53 @@
             display: none;
             margin: 20px auto 0;
         }
+        .drop-zone {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            animation: dropZoneFadeIn 1s ease-in-out;
+        }
+        .drop-zone.dragover, .drop-zone:hover {
+            background-color: #e9ecef;
+            transform: scale(1.05);
+        }
+        .drop-zone input {
+            display: none;
+        }
+        .drop-zone label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .drop-zone:hover label, .drop-zone.dragover label {
+            color: #0056b3;
+        }
+        @keyframes dropZoneFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .drop-zone.selected {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        .drop-zone.selected label {
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="mt-5">Up ảnh để nhận diện</h1>
         <form action="/" method="post" enctype="multipart/form-data" class="mt-3">
-            <div class="form-group">
-                <input type="file" name="file" class="form-control-file" id="file">
+            <div id="drop-zone" class="drop-zone">
+                <input type="file" name="file" id="file" accept="image/*">
+                <label for="file" id="file-label">Chọn ảnh hoặc kéo thả vào đây</label>
             </div>
             <div class="form-group mt-3">
                 <input type="text" name="url" class="form-control" placeholder="Hoặc nhập URL của ảnh">
@@ -98,6 +137,56 @@
                 });
             }, 'image/jpeg');
         });
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file');
+        const fileLabel = document.getElementById('file-label');
+
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updateDropZone(files[0]);
+                uploadFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                updateDropZone(fileInput.files[0]);
+                uploadFile(fileInput.files[0]);
+            }
+        });
+
+        function updateDropZone(file) {
+            dropZone.classList.add('selected');
+            fileLabel.textContent = file.name;
+        }
+
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            });
+        }
     </script>
 </body>
 </html>
