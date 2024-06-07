@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #e0e5ec;
             color: #333;
             font-family: 'Arial', sans-serif;
         }
         .container {
             margin-top: 5%;
             animation: fadeIn 1s ease-in;
+            box-shadow: 7px 7px 20px #9b9b9b, -7px -7px 20px #fff;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -22,9 +26,8 @@
         .img-container img {
             max-width: 100%;
             height: auto;
-            border: 2px solid #333;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
             animation: scaleUp 0.5s ease-in-out;
         }
         @keyframes scaleUp {
@@ -32,26 +35,42 @@
             to { transform: scale(1); }
         }
         .list-group-item {
-            background-color: white;
-            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            border: none;
             color: #333;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
+            border-radius: 10px;
             transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+            opacity: 0;
+        }
+        .list-group-item.fade-in {
+            animation: fadeInItem 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeInItem {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .list-group-item:hover {
-            background-color: #f1f1f1;
+            background-color: #e0e5ec;
         }
         .card {
-            background-color: white;
-            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            border: none;
             color: #333;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
+            border-radius: 20px;
         }
         .btn-secondary {
-            background-color: #6c757d;
+            background-color: #e0e5ec;
             border: none;
+            color: #333;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
+            border-radius: 10px;
             transition: background-color 0.5s, transform 0.2s ease-in-out;
         }
         .btn-secondary:hover {
-            background-color: #5a6268;
+            background-color: #d1d9e6;
             transform: scale(1.05);
         }
     </style>
@@ -65,7 +84,7 @@
             </div>
         </div>
         <h2 class="mt-4 text-center">Nhãn</h2>
-        <ul class="list-group mt-3">
+        <ul class="list-group mt-3" id="label-list">
             {% for description, score in labels %}
                 <li class="list-group-item">
                     <span class="font-weight-bold">{{ description }}</span>
@@ -88,5 +107,15 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const labels = document.querySelectorAll('.list-group-item');
+            labels.forEach((label, index) => {
+                setTimeout(() => {
+                    label.classList.add('fade-in');
+                }, index * 200);
+            });
+        });
+    </script>
 </body>
 </html>
