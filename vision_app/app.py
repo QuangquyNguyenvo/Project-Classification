@@ -30,7 +30,10 @@ def index():
         url = request.form.get('url')
         if (file and file.filename and allowed_file(file.filename)) or (url and url.strip()):
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg')
-            if file: file.save(filepath)
+            if file: file.save(filepath) \
+            
+
+            
             else: Image.open(io.BytesIO(requests.get(url).content)).save(filepath)
             labels, modified_image_path = detect_labels_and_objects(filepath)
             session['labels'] = [(label.description, label.score) for label in labels]
@@ -55,7 +58,7 @@ def detect_labels_and_objects(path):
     object_response = client.object_localization(image=image)
     objects = object_response.localized_object_annotations
     im = Image.open(path)
-    im = im.resize((640, 480))
+    im = im.resize((1024, 768))
     draw = ImageDraw.Draw(im)
     # sửa font mặc định lại xíu
     default_font_path = fm.findSystemFonts()[0]
