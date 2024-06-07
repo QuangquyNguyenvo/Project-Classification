@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #e0e5ec;
             color: #333;
             font-family: 'Arial', sans-serif;
         }
@@ -21,19 +21,25 @@
             to { opacity: 1; }
         }
         .form-control, .form-control-file {
+            border: none;
+            box-shadow: inset 7px 7px 20px #cbced1, inset -7px -7px 20px #fff;
+            border-radius: 10px;
+            padding: 10px;
             transition: transform 0.3s ease-in-out;
         }
         .form-control:hover, .form-control-file:hover {
             transform: scale(1.05);
         }
         .btn-custom {
-            background-color: #007bff;
-            color: white;
+            background-color: #e0e5ec;
+            color: #333;
             border: none;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
+            border-radius: 10px;
             transition: background-color 0.5s, transform 0.3s ease-in-out;
         }
         .btn-custom:hover {
-            background-color: #0056b3;
+            background-color: #d1d9e6;
             transform: scale(1.05);
         }
         #camera {
@@ -41,24 +47,26 @@
             margin: 20px auto;
             width: 640px;
             height: 480px;
-            border: 2px solid #007bff;
+            border: 2px solid #e0e5ec;
             border-radius: 10px;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
         }
         #captureBtn {
             display: none;
             margin: 20px auto 0;
         }
         .drop-zone {
-            border: 2px dashed #007bff;
+            border: 2px dashed #d3d8dd;
             border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
             animation: dropZoneFadeIn 1s ease-in-out;
+            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
         }
         .drop-zone.dragover, .drop-zone:hover {
-            background-color: #e9ecef;
+            background-color: #dee4ee;
             transform: scale(1.05);
         }
         .drop-zone input {
@@ -67,44 +75,44 @@
         .drop-zone label {
             font-size: 16px;
             font-weight: bold;
-            color: #007bff;
+            color: #333;
             cursor: pointer;
             transition: color 0.3s;
         }
         .drop-zone:hover label, .drop-zone.dragover label {
-            color: #0056b3;
+            color: #555;
         }
         @keyframes dropZoneFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .drop-zone.selected {
-            background-color: #28a745;
-            border-color: #28a745;
-            color: white;
+            background-color: #d1d9e6;
+            border-color: #d1d9e6;
+            color: #333;
         }
         .drop-zone.selected label {
-            color: white;
+            color: #333;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5">Up ảnh để nhận diện</h1>
+        <h1 class="mt-5">AI PHÂN LOẠI RÁC TỰ ĐỘNG - BIOSENSE AI</h1>
         <form action="/" method="post" enctype="multipart/form-data" class="mt-3">
             <div id="drop-zone" class="drop-zone">
                 <input type="file" name="file" id="file" accept="image/*">
-                <label for="file" id="file-label">Chọn ảnh hoặc kéo thả vào đây</label>
+                <label for="file" id="file-label">Chọn ảnh hoặc kéo thả ảnh vào đây</label>
             </div>
             <div class="form-group mt-3">
-                <input type="text" name="url" class="form-control" placeholder="Hoặc nhập URL của ảnh">
+                <input type="text" name="url" class="form-control" placeholder="Hoặc bạn cũng có thể nhập url ảnh vào đây">
             </div>
-            <button type="submit" class="btn btn-custom mt-3">Tải ảnh lên</button>
+            <button type="submit" class="btn btn-custom mt-3">Upload ảnh</button>
         </form>
         
-        <button id="useWebcam" class="btn btn-custom mt-3">Sử dụng webcam</button>
+        <button id="useWebcam" class="btn btn-custom mt-3">Sử dụng Webcam</button>
         <video id="camera" autoplay></video>
-        <button id="captureBtn" class="btn btn-custom">Chụp ảnh</button>
+        <button id="captureBtn" class="btn btn-custom">Chụp</button>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
 
@@ -187,6 +195,23 @@
                 }
             });
         }
+    </script>
+    <script>
+        function typeEffect(element, speed) {
+            const text = element.innerHTML;
+            element.innerHTML = "";
+            let i = 0;
+            const timer = setInterval(function() {
+                if (i < text.length) {
+                    element.append(text.charAt(i));
+                    i++;
+                } else clearInterval(timer);
+            }, speed);
+        }
+        const headings = document.querySelectorAll("h1, h2, p, label");
+        headings.forEach(heading => {
+            typeEffect(heading, 60);
+        });
     </script>
 </body>
 </html>
