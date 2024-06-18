@@ -5,78 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Result</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         body {
-            background-color: #e0e5ec;
-            color: #333;
+            background-color: #0d1117;
+            color: #c9d1d9;
             font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 250px;
+            background-color: #161b22;
+            padding: 20px;
+            transition: width 0.3s;
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            color: #c9d1d9;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #21262d;
         }
         .container {
-            margin-top: 5%;
-            animation: fadeIn 1s ease-in;
-            box-shadow: 7px 7px 20px #9b9b9b, -7px -7px 20px #fff;
-            border-radius: 20px;
-            background-color: #f8f9fa;
+            margin-left: 270px;
             padding: 20px;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
         .img-container img {
             max-width: 100%;
             height: auto;
             border-radius: 20px;
-            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
-            animation: scaleUp 0.5s ease-in-out;
-        }
-        @keyframes scaleUp {
-            from { transform: scale(0.8); }
-            to { transform: scale(1); }
         }
         .list-group-item {
-            background-color: #f8f9fa;
+            background-color: #21262d;
             border: none;
-            color: #333;
-            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
+            color: #c9d1d9;
             border-radius: 10px;
-            transition: background-color 0.3s ease;
             margin-bottom: 10px;
-            opacity: 0;
-        }
-        .list-group-item.fade-in {
-            animation: fadeInItem 0.5s ease-in-out forwards;
-        }
-        @keyframes fadeInItem {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            transition: background-color 0.3s ease;
+            font-size: 18px;
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
         }
         .list-group-item:hover {
-            background-color: #e0e5ec;
+            background-color: #30363d;
         }
         .card {
-            background-color: #f8f9fa;
+            background-color: #21262d;
             border: none;
-            color: #333;
-            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
+            color: #c9d1d9;
             border-radius: 20px;
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
         }
         .btn-secondary {
-            background-color: #e0e5ec;
+            background-color: #238636;
             border: none;
-            color: #333;
-            box-shadow: 7px 7px 20px #cbced1, -7px -7px 20px #fff;
-            border-radius: 10px;
-            transition: background-color 0.5s, transform 0.2s ease-in-out;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
         .btn-secondary:hover {
-            background-color: #d1d9e6;
-            transform: scale(1.05);
+            background-color: #2ea043;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin-left: 0;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .list-group-item, .card {
+                width: 100%;
+            }
+        }
+        @media (max-width: 576px) {
+            .container {
+                padding: 5px;
+            }
+            .img-container img {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container fade-in">
+    <div class="sidebar">
+        <h2>BiosenseAI</h2>
+        <a href="/"><i class="fas fa-home"></i> Home</a>
+        <a href="/result"><i class="fas fa-list"></i> Results</a>
+        <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+    </div>
+    <div class="container">
         <h1 class="mt-5 text-center">Kết quả</h1>
         <div class="row justify-content-center mt-3">
             <div class="col-md-6 img-container">
@@ -104,18 +150,5 @@
             <a href="/" class="btn btn-secondary">Tải ảnh khác lên</a>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const labels = document.querySelectorAll('.list-group-item');
-            labels.forEach((label, index) => {
-                setTimeout(() => {
-                    label.classList.add('fade-in');
-                }, index * 200);
-            });
-        });
-    </script>
 </body>
 </html>
