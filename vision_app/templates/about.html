@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            background-color: #1e1e2f;
+            color: #c9d1d9;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 250px;
+            background-color: #1a1a29;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            transform: translateX(0);
+            overflow-y: auto;
+            z-index: 1000; /* Ensure sidebar is on top */
+        }
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+        .sidebar h2 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            color: #c9d1d9;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 1.25rem;
+        }
+        .sidebar a i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        .sidebar a:hover {
+            background-color: #21262d;
+        }
+        .content-wrapper {
+            transition: margin-left 0.3s ease;
+            margin-left: 250px; /* Default margin to account for the sidebar */
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+        .content-wrapper.full-width {
+            margin-left: 0;
+            width: 100%;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card, .profile-card {
+            background-color: #2a2d3e;
+            border: none;
+            color: #c9d1d9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 15px;
+        }
+        .profile-card h3 {
+            margin-bottom: 15px;
+        }
+        .profile-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            padding-left: 20px;
+        }
+        .profile-card ul li {
+            margin-bottom: 10px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .profile-card ul li i {
+            margin-right: 10px;
+        }
+        .profile-card a {
+            color: #c9d1d9;
+            text-decoration: none;
+        }
+        .profile-card a:hover {
+            color: #ffffff;
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 50%;
+            left: 250px;
+            z-index: 1000;
+            background-color: #1a1a29;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: left 0.3s ease, transform 0.3s ease;
+            transform: translateY(-50%);
+        }
+        .toggle-btn.closed {
+            left: 0;
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .sidebar.closed + .toggle-btn {
+            left: 0;
+        }
+        .sidebar.closed + .toggle-btn + .content-wrapper {
+            margin-left: 0;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                transform: translateX(0);
+            }
+            .toggle-btn {
+                left: 0;
+            }
+            .sidebar.closed + .toggle-btn {
+                left: 0;
+            }
+            .content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <h2>BiosenseAI</h2>
+        <a href="/"><i class="fas fa-home"></i> Home</a>
+        <a href="/result"><i class="fas fa-list"></i> Results</a>
+        <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+    </div>
+    <button class="toggle-btn" id="toggle-btn"><i class="fas fa-arrow-left"></i></button>
+    <div class="content-wrapper" id="content-wrapper">
+        <div class="container" id="main-content">
+            <h1 class="mt-5 text-center">About This Project</h1>
+            <div class="card mt-3">
+                <h2>About Biosense AI</h2>
+                <p>Biosense AI is an advanced AI-powered waste sorting system designed to improve waste management efficiency. The system accurately identifies and categorizes various types of waste, making recycling easier and reducing negative environmental impacts.</p>
+                <p>This project was created by two students from Thoại Ngọc Hầu High School: Nguyễn Võ Quang Quý and Nguyễn Thiện Nhân.</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="profile-card">
+                            <img src="{{ url_for('static', filename='avatar/quangquy.jpg') }}" alt="Nguyễn Võ Quang Quý">
+                            <h3>Nguyễn Võ Quang Quý</h3>
+                            <ul>
+                                <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                                <li><a href="#"><i class="fab fa-github"></i> Github</a></li>
+                                <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="profile-card">
+                            <img src="{{ url_for('static', filename='avatar/thiennhan.jpg') }}" alt="Nguyễn Thiện Nhân">
+                            <h3>Nguyễn Thiện Nhân</h3>
+                            <ul>
+                                <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                                <li><a href="#"><i class="fab fa-github"></i> Github</a></li>
+                                <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const contentWrapper = document.getElementById('content-wrapper');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('closed');
+            toggleBtn.classList.toggle('closed');
+            contentWrapper.classList.toggle('full-width');
+        });
+    </script>
+</body>
+</html>
