@@ -93,16 +93,25 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .btn-secondary {
-            background-color: #2a2d3e;
+        .btn-secondary, .btn-primary {
             border: none;
-            color: #ffffff;
             padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+        .btn-secondary {
+            background-color: #2a2d3e;
+            color: #ffffff;
+        }
         .btn-secondary:hover {
             background-color: #21262d;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
         ::-webkit-scrollbar {
             display: none;
@@ -155,6 +164,26 @@
             margin-left: 0;
             width: 100%;
         }
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: transparent;
+            z-index: 1100;
+        }
+        .progress-bar {
+            height: 5px;
+            background-color: #ff4757;
+            transition: width 0.1s linear;
+        }
+        .card-header {
+            background-color: #21262d;
+            color: #ffffff;
+        }
+        .card-body {
+            background-color: #2a2d3e;
+        }
     </style>
 </head>
 <body>
@@ -166,6 +195,27 @@
     </div>
     <button class="toggle-btn" id="toggle-btn"><i class="fas fa-arrow-left"></i></button>
     <div class="content-wrapper" id="content-wrapper">
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar" style="width: 100%;"></div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header text-center">
+                <h5 class="card-title">Loại rác: <strong id="waste-type">{{ waste_type }}</strong></h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="card-text">Kết quả có chính xác không?</p>
+                <button id="correct-btn" class="btn btn-primary">Đúng</button>
+                <button id="incorrect-btn" class="btn btn-secondary">Không</button>
+                <div id="correction-options" style="display: none; margin-top: 20px;">
+                    <p class="card-text">Chọn loại rác đúng:</p>
+                    <button class="btn btn-secondary correction-option" data-type="Hữu cơ">Hữu cơ</button>
+                    <button class="btn btn-secondary correction-option" data-type="Vô cơ">Vô cơ</button>
+                    <button class="btn btn-secondary correction-option" data-type="Y tế">Y tế</button>
+                    <button class="btn btn-secondary correction-option" data-type="Linh kiện điện tử">Linh kiện điện tử</button>
+                    <button class="btn btn-secondary correction-option" data-type="Khác">Khác</button>
+                </div>
+            </div>
+        </div>
         <h1 class="mt-5 text-center">Kết quả</h1>
         <div class="row justify-content-center mt-3">
             <div class="col-md-6 img-container">
@@ -181,14 +231,6 @@
                 </li>
             {% endfor %}
         </ul>
-        <div class="card mt-4">
-            <div class="card-header text-center">
-                <h5 class="card-title">Loại rác</h5>
-            </div>
-            <div class="card-body text-center">
-                <p class="card-text"><strong>{{ waste_type }}</strong></p>
-            </div>
-        </div>
         <div class="text-center mt-4">
             <a href="/" class="btn btn-secondary">Tải ảnh khác lên</a>
         </div>
@@ -197,12 +239,57 @@
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         const contentWrapper = document.getElementById('content-wrapper');
+        const progressBar = document.getElementById('progress-bar');
+        const correctBtn = document.getElementById('correct-btn');
+        const incorrectBtn = document.getElementById('incorrect-btn');
+        const correctionOptions = document.getElementById('correction-options');
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('closed');
             toggleBtn.classList.toggle('closed');
             contentWrapper.classList.toggle('full-width');
         });
+
+        let width = 100;
+        let interval = setInterval(() => {
+            width -= 1;
+            progressBar.style.width = width + '%';
+            if (width <= 0) {
+                clearInterval(interval);
+                window.location.href = '/';
+            }
+        }, 100);
+
+        correctBtn.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+
+        incorrectBtn.addEventListener('click', () => {
+            clearInterval(interval);
+            correctionOptions.style.display = 'block';
+        });
+
+        document.querySelectorAll('.correction-option').forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedType = button.getAttribute('data-type');
+                document.getElementById('waste-type').innerText = selectedType;
+                fetch('/update_result', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `selected_waste_type=${selectedType}`
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    }
+                });
+            });
+        });
+
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 10000);
     </script>
 </body>
 </html>
