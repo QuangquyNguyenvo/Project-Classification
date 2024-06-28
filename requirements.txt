@@ -1,4 +1,7 @@
 Flask
-google-cloud-vision
-Pillow 
+Pillow
 matplotlib
+requests
+google-generativeai
+opencv-python
+numpy
