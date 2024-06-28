@@ -349,56 +349,7 @@
             fileLabel.textContent = file.name;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx = document.getElementById('wasteChart').getContext('2d');
-            const wasteChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Hữu cơ', 'Vô cơ', 'Y tế', 'Linh kiện điện tử', 'Khác'],
-                    datasets: [{
-                        data: [
-                            {{ counters['Hữu cơ'] }},
-                            {{ counters['Vô cơ'] }},
-                            {{ counters['Y tế'] }},
-                            {{ counters['Linh kiện điện tử'] }},
-                            {{ counters['Khác'] }}
-                        ],
-                        backgroundColor: [
-                            '#ff6384',
-                            '#36a2eb',
-                            '#ffce56',
-                            '#4bc0c0',
-                            '#9966ff'
-                        ],
-                        hoverBackgroundColor: [
-                            '#ff6384',
-                            '#36a2eb',
-                            '#ffce56',
-                            '#4bc0c0',
-                            '#9966ff'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: 'white',
-                                usePointStyle: true,
-                                pointStyle: 'circle',
-                                padding: 20,
-                                boxWidth: 15,
-                                boxHeight: 15,
-                                lineHeight: 1.2
-                            }
-                        },
-                    }
-                }
-            });
-        });
+
 
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
@@ -410,5 +361,5 @@
             contentWrapper.classList.toggle('full-width');
         });
     </script>
-</body>
+    </body>
 </html>
