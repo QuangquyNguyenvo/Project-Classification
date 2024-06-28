@@ -92,9 +92,6 @@
             padding: 20px;
             transition: background-color 0.3s;
         }
-        .upload-option:hover {
-            background-color: #21262d;
-        }
         .upload-option i {
             font-size: 24px;
             margin-bottom: 10px;
@@ -106,9 +103,6 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .drop-zone.dragover, .drop-zone:hover {
-            background-color: #21262d;
-        }
         .drop-zone input {
             display: none;
         }
@@ -118,9 +112,6 @@
             color: #c9d1d9;
             cursor: pointer;
             transition: color 0.3s;
-        }
-        .drop-zone:hover label, .drop-zone.dragover label {
-            color: #ffffff;
         }
         .form-group input {
             width: 100%;
@@ -187,8 +178,8 @@
         }
         #chart-container {
             position: relative;
-            width: 100%;
-            height: 400px;
+            width: 80%;
+            height: 350px;
         }
         .toggle-btn {
             position: fixed;
@@ -214,6 +205,12 @@
         .sidebar.closed + .toggle-btn + .content-wrapper {
             margin-left: 0;
             width: 100%;
+        }
+        .drop-zone.dragover, .drop-zone:hover, .btn-custom:hover {
+            background-color: #21262d;
+        }
+        .drop-zone:hover label, .drop-zone.dragover label {
+            color: #ffffff;
         }
     </style>
 </head>
@@ -349,8 +346,6 @@
             fileLabel.textContent = file.name;
         }
 
-
-
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         const contentWrapper = document.getElementById('content-wrapper');
@@ -360,6 +355,53 @@
             toggleBtn.classList.toggle('closed');
             contentWrapper.classList.toggle('full-width');
         });
+        const ctx = document.getElementById('wasteChart').getContext('2d');
+        const wasteChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Hữu cơ', 'Vô cơ', 'Y tế', 'Linh kiện điện tử', 'Khác'],
+                datasets: [{
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff'],
+                    hoverBackgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: {
+                                weight: 'bold'
+                            },
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+        function updateChartData(counters) {
+            wasteChart.data.datasets[0].data = [
+                counters['Hữu cơ'],
+                counters['Vô cơ'],
+                counters['Y tế'],
+                counters['Linh kiện điện tử'],
+                counters['Khác']
+            ];
+            wasteChart.update();
+        }
+        fetch('/get_counters')
+            .then(response => response.json())
+            .then(data => {
+                updateChartData(data.counters);
+            });
     </script>
-    </body>
+</body>
 </html>
