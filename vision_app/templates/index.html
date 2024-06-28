@@ -213,6 +213,18 @@
         .drop-zone:hover label, .drop-zone.dragover label {
             color: #ffffff;
         }
+        /* New styles to center the capture button */
+        #captureBtn {
+            display: none;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .capture-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
@@ -246,8 +258,10 @@
                 <div class="upload-option">
                     <i class="fas fa-camera"></i><br>
                     <button type="button" id="useWebcam" class="btn btn-custom">Sử dụng Webcam</button>
-                    <video id="camera" autoplay class="mx-auto d-block"></video>
-                    <button type="button" id="captureBtn" class="btn btn-custom mt-3">Chụp</button>
+                    <div class="capture-container">
+                        <video id="camera" autoplay class="mx-auto d-block"></video>
+                        <button type="button" id="captureBtn" class="btn btn-custom mt-3">Chụp</button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -279,14 +293,12 @@
             video.style.display = 'block';
             document.getElementById('captureBtn').style.display = 'block';
         });
-
         document.getElementById('captureBtn').addEventListener('click', () => {
             const video = document.getElementById('camera');
             const canvas = document.getElementById('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-
             canvas.toBlob((blob) => {
                 const formData = new FormData();
                 formData.append('webcam_image', blob, 'webcam_image.jpg');
