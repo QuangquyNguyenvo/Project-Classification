@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <style>
+        body {
+            background-color: #2a2d3e;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+        .settings-container {
+            padding: 20px;
+        }
+        .settings-container h3 {
+            margin-bottom: 20px;
+        }
+        .settings-container .setting-item {
+            margin-bottom: 15px;
+        }
+        .settings-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .settings-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .settings-container button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #444b52;
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .settings-container button:hover {
+            background-color: #3a3f44;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <h3>Settings</h3>
+        
+        <!-- Notifications Settings -->
+        <div class="setting-item">
+            <label for="notifications">
+                <input type="checkbox" id="notifications" checked>
+                Enable Notifications
+            </label>
+        </div>
+
+        <!-- Performance Settings -->
+        <div class="setting-item">
+            <label for="animations">
+                <input type="checkbox" id="animations" checked>
+                Enable Animations
+            </label>
+        </div>
+
+        <!-- Support Settings -->
+        <div class="setting-item">
+            <label for="feedback">Send Feedback:</label>
+            <button id="feedback" onclick="alert('Feedback functionality not implemented yet')">Send Feedback</button>
+        </div>
+        
+    </div>
+    <script>
+        // Add any JavaScript needed for settings functionality
+        document.getElementById('notifications').addEventListener('change', function() {
+            alert('Notifications ' + (this.checked ? 'enabled' : 'disabled'));
+        });
+
+        document.getElementById('animations').addEventListener('change', function() {
+            alert('Animations ' + (this.checked ? 'enabled' : 'disabled'));
+        });
+    </script>
+</body>
+</html>
