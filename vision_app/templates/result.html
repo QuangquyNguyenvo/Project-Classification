@@ -6,7 +6,6 @@
     <title>Image Result</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         body {
             background-color: #1e1e2f;
@@ -44,15 +43,7 @@
             display: block;
             padding: 10px;
             border-radius: 5px;
-            transition: background-color 0.3s;
             font-size: 1.25rem;
-        }
-        .sidebar a i {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-        .sidebar a:hover {
-            background-color: #21262d;
         }
         .content-wrapper {
             transition: margin-left 0.3s ease;
@@ -68,6 +59,7 @@
             max-width: 100%;
             height: auto;
             border-radius: 20px;
+            max-height: 360px; /* Ensuring the image fits well within the screen */
         }
         .list-group-item {
             background-color: #2a2d3e;
@@ -75,42 +67,33 @@
             color: #c9d1d9;
             border-radius: 10px;
             margin-bottom: 10px;
-            transition: background-color 0.3s ease;
             font-size: 18px;
-            width: 75%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .list-group-item:hover {
-            background-color: #2a2d3e;
+            width: 100%;
         }
         .card {
             background-color: #2a2d3e;
             border: none;
             color: #c9d1d9;
             border-radius: 20px;
-            width: 75%;
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
         }
         .btn-secondary, .btn-primary {
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
-            transition: background-color 0.3s;
         }
         .btn-secondary {
             background-color: #2a2d3e;
             color: #ffffff;
         }
-        .btn-secondary:hover {
+        .btn-secondary:hover, .btn-secondary:focus {
             background-color: #21262d;
         }
         .btn-primary {
             background-color: #007bff;
             color: #ffffff;
         }
-        .btn-primary:hover {
+        .btn-primary:hover, .btn-primary:focus {
             background-color: #0056b3;
         }
         ::-webkit-scrollbar {
@@ -184,6 +167,52 @@
         .card-body {
             background-color: #2a2d3e;
         }
+        /* New styles for the specific layout */
+        .card-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch; /* Ensure equal height */
+        }
+        .card-wrapper .card {
+            width: 48%; /* Adjust width as needed */
+            margin-bottom: 20px;
+        }
+        .correction-options {
+            background-color: #2a2d3e;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            display: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            animation: slide-down 0.3s ease forwards;
+        }
+        .correction-options button {
+            display: block;
+            margin: 5px 0;
+            padding: 8px 16px;
+            border: none;
+            background-color: #3a3e4b;
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .correction-options button:hover {
+            background-color: #4a4e5b;
+        }
+        @keyframes slide-down {
+            0% {
+                transform: translateX(-50%) translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -198,39 +227,56 @@
         <div class="progress">
             <div class="progress-bar" id="progress-bar" style="width: 100%;"></div>
         </div>
-        <div class="card mt-4">
-            <div class="card-header text-center">
-                <h5 class="card-title">Loại rác: <strong id="waste-type">{{ waste_type }}</strong></h5>
+        
+        <div class="card-wrapper">
+            <div class="card mt-4">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Loại rác: <strong id="waste-type">{{ waste_type }}</strong></h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="card-text mt-4">Kết quả có chính xác không?</p>
+                    <button id="correct-btn" class="btn btn-primary">Đúng</button>
+                    <button id="incorrect-btn" class="btn btn-secondary">Không</button>
+                    <div id="correction-options" class="correction-options">
+                        <p class="card-text">Chọn loại rác đúng:</p>
+                        <button class="btn btn-secondary correction-option" data-type="Hữu cơ">Hữu cơ</button>
+                        <button class="btn btn-secondary correction-option" data-type="Vô cơ">Vô cơ</button>
+                        <button class="btn btn-secondary correction-option" data-type="Y tế">Y tế</button>
+                        <button class="btn btn-secondary correction-option" data-type="Linh kiện điện tử">Linh kiện điện tử</button>
+                        <button class="btn btn-secondary correction-option" data-type="Khác">Khác</button>
+                    </div>
+                </div>
             </div>
-            <div class="card-body text-center">
-                <p class="card-text">Kết quả có chính xác không?</p>
-                <button id="correct-btn" class="btn btn-primary">Đúng</button>
-                <button id="incorrect-btn" class="btn btn-secondary">Không</button>
-                <div id="correction-options" style="display: none; margin-top: 20px;">
-                    <p class="card-text">Chọn loại rác đúng:</p>
-                    <button class="btn btn-secondary correction-option" data-type="Hữu cơ">Hữu cơ</button>
-                    <button class="btn btn-secondary correction-option" data-type="Vô cơ">Vô cơ</button>
-                    <button class="btn btn-secondary correction-option" data-type="Y tế">Y tế</button>
-                    <button class="btn btn-secondary correction-option" data-type="Linh kiện điện tử">Linh kiện điện tử</button>
-                    <button class="btn btn-secondary correction-option" data-type="Khác">Khác</button>
+            
+            <div class="card mt-4">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Vật thể nhận diện được là:</h5>
+                </div>
+                <div class="card-body text-center">
+                    <ul class="list-group mt-3 d-flex justify-content-center" id="label-list">
+                        {% for object in objects %}
+                            <li class="list-group-item text-center">
+                                <span class="font-weight-bold">{{object}}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
-        <h1 class="mt-5 text-center">Kết quả</h1>
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-6 img-container">
-                <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Image" class="img-fluid">
+        
+        <div class="card mt-4">
+            <div class="card-header text-center">
+                <h5 class="card-title">Hình ảnh</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 img-container">
+                        <img src="{{ url_for('static', filename='uploads/modified_uploaded_image.jpg') }}" alt="Image">
+                    </div>
+                </div>
             </div>
         </div>
-        <h2 class="mt-4 text-center">Nhãn</h2>
-        <ul class="list-group mt-3" id="label-list">
-            {% for description, score in labels %}
-                <li class="list-group-item">
-                    <span class="font-weight-bold">{{ description }}</span>
-                    <span class="float-right"><strong>{{ (score * 100)|round(2) }}%</strong></span>
-                </li>
-            {% endfor %}
-        </ul>
+        
         <div class="text-center mt-4">
             <a href="/" class="btn btn-secondary">Tải ảnh khác lên</a>
         </div>
@@ -243,14 +289,15 @@
         const correctBtn = document.getElementById('correct-btn');
         const incorrectBtn = document.getElementById('incorrect-btn');
         const correctionOptions = document.getElementById('correction-options');
-
+        const wasteTypeDisplay = document.getElementById('waste-type');
+    
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('closed');
             toggleBtn.classList.toggle('closed');
             contentWrapper.classList.toggle('full-width');
         });
-
-        let width = 100;
+    
+        let width = 110;
         let interval = setInterval(() => {
             width -= 1;
             progressBar.style.width = width + '%';
@@ -259,20 +306,20 @@
                 window.location.href = '/';
             }
         }, 100);
-
+    
         correctBtn.addEventListener('click', () => {
             window.location.href = '/';
         });
-
+    
         incorrectBtn.addEventListener('click', () => {
             clearInterval(interval);
             correctionOptions.style.display = 'block';
         });
-
+    
         document.querySelectorAll('.correction-option').forEach(button => {
             button.addEventListener('click', () => {
                 const selectedType = button.getAttribute('data-type');
-                document.getElementById('waste-type').innerText = selectedType;
+                wasteTypeDisplay.innerText = selectedType;
                 fetch('/update_result', {
                     method: 'POST',
                     headers: {
@@ -286,10 +333,9 @@
                 });
             });
         });
-
         setTimeout(() => {
             window.location.href = '/';
-        }, 10000);
-    </script>
+        }, 11000);
+    </script>    
 </body>
 </html>
