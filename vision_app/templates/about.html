@@ -152,6 +152,49 @@
                 width: 100%;
             }
         }
+        /* New styles for settings button and popup */
+        .settings-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1100;
+            background-color: #1a1a29;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            transition: background-color 0.3s;
+        }
+        .settings-btn.active {
+            background-color: #2a2d3e;
+        }
+        .settings-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2a2d3e;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1200;
+        }
+        .settings-popup h3 {
+            margin-bottom: 20px;
+        }
+        .settings-popup .close-btn {
+            background-color: #ff4757;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -160,6 +203,7 @@
         <a href="/"><i class="fas fa-home"></i> Home</a>
         <a href="/result"><i class="fas fa-list"></i> Results</a>
         <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+        <button class="settings-btn" id="settings-btn"><i class="fas fa-cog"></i></button>
     </div>
     <button class="toggle-btn" id="toggle-btn"><i class="fas fa-arrow-left"></i></button>
     <div class="content-wrapper" id="content-wrapper">
@@ -196,15 +240,42 @@
             </div>
         </div>
     </div>
+    <div class="settings-popup" id="settings-popup">
+        <!-- Content from settings.html will be loaded here -->
+    </div>
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         const contentWrapper = document.getElementById('content-wrapper');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsPopup = document.getElementById('settings-popup');
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('closed');
             toggleBtn.classList.toggle('closed');
             contentWrapper.classList.toggle('full-width');
+        });
+
+        settingsBtn.addEventListener('click', () => {
+            if (settingsPopup.style.display === 'block') {
+                settingsPopup.style.display = 'none';
+                settingsBtn.classList.remove('active');
+            } else {
+                fetch('/settings')
+                    .then(response => response.text())
+                    .then(data => {
+                        settingsPopup.innerHTML = data;
+                        settingsPopup.style.display = 'block';
+                        settingsBtn.classList.add('active');
+                    });
+            }
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == settingsPopup) {
+                settingsPopup.style.display = 'none';
+                settingsBtn.classList.remove('active');
+            }
         });
     </script>
 </body>
