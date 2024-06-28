@@ -1,10 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify
-from PIL import Image, ImageDraw, ImageFont
-import matplotlib.font_manager as fm
+from PIL import Image
 import io, os, requests, json
 import google.generativeai as genai
-import cv2
-import numpy as np
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -29,23 +26,6 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'jfif', 'webp'}
 
-def determine_waste_type(labels):
-    organic_labels = ['food', 'fruit', 'vegetable', 'plant', 'organic', 'compost', 'biodegradable', 'leaf', 'wood', 'flower', 'seed', 'grain', 'bread', 'meat', 'dairy', 'egg', 'human', 'animal']
-    inorganic_labels = ['plastic', 'glass', 'metal', 'paper', 'cardboard', 'aluminum', 'steel', 'tin', 'ceramic', 'concrete', 'stone', 'rubber', 'leather', 'rubber band']
-    electronic_labels = ['electronic', 'computer', 'phone', 'circuit', 'laptop', 'monitor', 'keyboard', 'printer', 'cable', 'battery', 'chip', 'motherboard', 'speaker', 'headphone', 'camera', 'television', 'remote']
-    medical_labels = ['medical', 'syringe', 'needle', 'bandage', 'glove', 'mask', 'pill', 'medication', 'tablet', 'surgical', 'first aid', 'medicine', 'hospital', 'clinic', 'blood', 'plasma', 'vaccine', 'test tube']
-
-    for label in labels:
-        if any(word in label.lower() for word in organic_labels):
-            return 'Hữu cơ'
-        elif any(word in label.lower() for word in inorganic_labels):
-            return 'Vô cơ'
-        elif any(word in label.lower() for word in electronic_labels):
-            return 'Linh kiện điện tử'
-        elif any(word in label.lower() for word in medical_labels):
-            return 'Y tế'
-    return 'Khác'
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -55,31 +35,23 @@ def index():
         if file and allowed_file(file.filename):
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg')
             file.save(filepath)
-            result, modified_image_path = detect_labels_and_objects(filepath)
-            waste_type = result['waste_type'] or 'Khác'
-            counters['successful_classifications'] += 1
-            counters[waste_type] = counters.get(waste_type, 0) + 1
-            session['objects'] = result['objects']
-            session['waste_type'] = waste_type
-            session['explanation'] = result.get('explanation', '')
-            session['image_url'] = modified_image_path
-            session['initial_waste_type'] = waste_type  
-            return redirect(url_for('result'))
         elif url and url.strip():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg')
             Image.open(io.BytesIO(requests.get(url).content)).save(filepath)
-            result, modified_image_path = detect_labels_and_objects(filepath)
-            waste_type = result['waste_type'] or 'Khác'
-            counters['successful_classifications'] += 1
-            counters[waste_type] = counters.get(waste_type, 0) + 1
-            session['objects'] = result['objects']
-            session['waste_type'] = waste_type
-            session['explanation'] = result.get('explanation', '')
-            session['image_url'] = modified_image_path
-            session['initial_waste_type'] = waste_type  
-            return redirect(url_for('result'))
         else:
             counters['Không xác định'] += 1
+            return render_template('index.html', counters=counters)
+        
+        result, modified_image_path = detect_labels_and_objects(filepath)
+        waste_type = result['waste_type'] or 'Khác'
+        counters['successful_classifications'] += 1
+        counters[waste_type] = counters.get(waste_type, 0) + 1
+        session['objects'] = result['objects']
+        session['waste_type'] = waste_type
+        session['explanation'] = result.get('explanation', '')
+        session['image_url'] = modified_image_path
+        session['initial_waste_type'] = waste_type
+        return redirect(url_for('result'))
     return render_template('index.html', counters=counters)
 
 @app.route('/result')
@@ -107,11 +79,13 @@ def detect_labels_and_objects(path):
         "2. Nếu nó là rác, nó thuộc loại rác nào?: Hữu cơ , Vô cơ , Y tế , Linh kiện điện tử , nếu không nằm trong 4 loại kia thì cứ trả về kết quả Khác cho dù nó không phải là rác.\n"
         "kết quả được đưa về dưới dạng Python với từ khoá 'objects', 'waste_type'.\n"
         "ví dụ nếu là chai nhựa thì trả về là Chai nhựa chứ không phải là ['Chai Nhựa']\n"
-        "nếu là vật liệu vô cơ kết thì kết quả trả về là tên vật + chất liệu\n"
+        "nếu là vật liệu vô cơ kết thì kết quả trả về là tên vật + chất liệu (như kim loại, nhựa, thuỷ tinh,...)\n"
         "Nếu là hữu cơ thì mô tả thêm ví dụ thay vì là táo thì sẽ là Quả táo màu đỏ (hoặc màu gì đó bạn nhìn thấy được)\n"
         "Đừng trả lời thừa dấu ví dụ như Hữu cơ' thì hãy trả về kết quả là Hữu Cơ\n"
+        "Nếu kết quả nhận được là một nhân vật nữ anime tóc hồng (trên tóc có phụ kiện màu vàng, đeo khuyên tai màu vàng) biểu cảm dễ thương, mắt tím có con ngươi chữ thập và là một nhân vật trong Wuthering Waves (hoặc trong tên file có chữ encore) thì trả về kết quả phải là vợ của thằng nhân\n"
         "Nếu kết quả nhận được là một nhân vật hoạt hình/ anime nữa thì hãy trả về kết quả là Gái alimi\n"
-        "Còn nếu nhân vật là một nhân vật tóc hồng thì bạn hãy kiểm tra xem đó có phải Bocchi trong anime/manga Bocchi The Rock không (hoặc trong tên file ảnh có chữ bocchi hoặc Gotoh Hitori) thì trả về kết quả là vợ của thằng Quangquy Nguyenvo"
+        "Nếu kết quả nhận được là một chiếc balo có màu xanh dương đậm, mặt trước có logo màu trắng kèm chữ tỉnh an giang thì trả về kết quả là: Balo trường THPT Chuyên Thoại Ngọc Hầu, và loại rác trả về là Đây là phần thưởng không phải rác\n"
+        "Còn nếu nhân vật là một nhân vật tóc hồng (có cọng tóc thừa ra ngoài, trên đầu có phụ kiện màu vàng và xanh biển) thì bạn hãy kiểm tra xem đó có phải Bocchi trong anime/manga Bocchi The Rock không (hoặc trong tên file ảnh có chữ bocchi hoặc Gotoh Hitori) thì trả về kết quả là vợ của thằng Quangquy Nguyenvo"
     )
     contents = [prompt, resized_image]
     response = model.generate_content(contents)
@@ -152,9 +126,13 @@ def update_result():
         if initial_waste_type != selected_waste_type:
             counters[initial_waste_type] -= 1
             counters[selected_waste_type] += 1
-            session['waste_type'] = selected_waste_type  # Cập nhật loại rác trong session
+            session['waste_type'] = selected_waste_type
         return jsonify({'status': 'success', 'message': 'Counter updated'})
     return jsonify({'status': 'error', 'message': 'Invalid waste type'}), 400
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
