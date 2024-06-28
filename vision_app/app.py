@@ -29,15 +29,19 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        counters['total_images'] += 1
         file = request.files.get('file')
         url = request.form.get('url')
-        counters['total_images'] += 1
+        webcam_image = request.files.get('webcam_image')
+        
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg')
+        
         if file and allowed_file(file.filename):
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg')
             file.save(filepath)
         elif url and url.strip():
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg')
             Image.open(io.BytesIO(requests.get(url).content)).save(filepath)
+        elif webcam_image:
+            webcam_image.save(filepath)
         else:
             counters['Không xác định'] += 1
             return render_template('index.html', counters=counters)
@@ -46,12 +50,17 @@ def index():
         waste_type = result['waste_type'] or 'Khác'
         counters['successful_classifications'] += 1
         counters[waste_type] = counters.get(waste_type, 0) + 1
-        session['objects'] = result['objects']
-        session['waste_type'] = waste_type
-        session['explanation'] = result.get('explanation', '')
-        session['image_url'] = modified_image_path
-        session['initial_waste_type'] = waste_type
+        
+        session.update({
+            'objects': result['objects'],
+            'waste_type': waste_type,
+            'explanation': result.get('explanation', ''),
+            'image_url': modified_image_path,
+            'initial_waste_type': waste_type
+        })
+        
         return redirect(url_for('result'))
+    
     return render_template('index.html', counters=counters)
 
 @app.route('/result')
