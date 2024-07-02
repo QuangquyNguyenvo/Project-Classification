@@ -2,14 +2,11 @@ from flask import Flask, request, render_template, redirect, url_for, session, j
 from PIL import Image
 import io, os, requests, json
 import google.generativeai as genai
-
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
 os.environ['GOOGLE_API_KEY'] = 'AIzaSyDokXpf-6hNH7Rzjynbnj4rphFXfqNA9u4'
-
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
-
 counters = {
     'total_images': 0,
     'successful_classifications': 0,
@@ -81,20 +78,18 @@ def detect_labels_and_objects(path):
     image = Image.open(path)
     resized_image = image.resize((640, 480))
     resized_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'modified_uploaded_image.jpg')
-    resized_image.save(resized_image_path)
+    resized_image.save(resized_image_path, 'png')
     prompt = (
         "nhận diện hình ảnh sau và trả lời thẳng ra câu hỏi sau:\n"
-        "1. Đây là hình ảnh của vật thể gì?\n"
-        "2. Nếu nó là rác, nó thuộc loại rác nào?: Hữu cơ , Vô cơ , Y tế , Linh kiện điện tử , nếu không nằm trong 4 loại kia thì cứ trả về kết quả Khác cho dù nó không phải là rác.\n"
+        "1. Đây là hình ảnh của vật thể gì? (nhớ trả về tên vật liệu, nếu không phải là hữu cơ thì tên vật liệu + loại chất liệu (nhựa, kim loại, thuỷ tinh,...))\n"
+        "2. Mô tả chất liệu nhớ phân tích cấu tạo tổng quát của nó thuộc loại rác nào?: Hữu cơ , Vô cơ , Y tế , Linh kiện điện tử. nếu vẫn không có kết quả thì trả về là Khác (nếu là hữu cơ thì xem bao bì của nó là hữu cơ hay vô cơ, ví dụ bịch sữa chua túi bằng chất liệu vô cơ thì kết quả là vô cơ). Nếu là người thì nhớ ghi mô tả chi tiết về người đó\n"
         "kết quả được đưa về dưới dạng Python với từ khoá 'objects', 'waste_type'.\n"
-        "ví dụ nếu là chai nhựa thì trả về là Chai nhựa chứ không phải là ['Chai Nhựa']\n"
-        "nếu là vật liệu vô cơ kết thì kết quả trả về là tên vật + chất liệu (như kim loại, nhựa, thuỷ tinh,...)\n"
-        "Nếu là hữu cơ thì mô tả thêm ví dụ thay vì là táo thì sẽ là Quả táo màu đỏ (hoặc màu gì đó bạn nhìn thấy được)\n"
-        "Đừng trả lời thừa dấu ví dụ như Hữu cơ' thì hãy trả về kết quả là Hữu Cơ\n"
-        "Nếu kết quả nhận được là một nhân vật nữ anime tóc hồng (trên tóc có phụ kiện màu vàng, đeo khuyên tai màu vàng) biểu cảm dễ thương, mắt tím có con ngươi chữ thập và là một nhân vật trong Wuthering Waves (hoặc trong tên file có chữ encore) thì trả về kết quả phải là vợ của thằng nhân\n"
+        "Nếu nó không phải hữu cơ thì hãy kiểm tra xem nó có cấu tạo từ chất liệu vô cơ như(kim loại, thuỷ tinh, nhựa,...) không"
+        "ví dụ nếu là chai nhựa thì trả về là Chai nhựa chứ không phải là ['Chai Nhựa'], đừng trả lời dư ra dấu ['']\n"
+        "Nếu kết quả nhận được là một nhân vật nữ anime tóc hồng (trên tóc có cài tóc màu vàng, đeo khuyên tai màu vàng), là một nhân vật trong Wuthering Waves (hoặc trong tên file có chữ encore) thì trả về kết quả phải là vợ của thằng nhân\n"
         "Nếu kết quả nhận được là một nhân vật hoạt hình/ anime nữa thì hãy trả về kết quả là Gái alimi\n"
         "Nếu kết quả nhận được là một chiếc balo có màu xanh dương đậm, mặt trước có logo màu trắng kèm chữ tỉnh an giang thì trả về kết quả là: Balo trường THPT Chuyên Thoại Ngọc Hầu, và loại rác trả về là Đây là phần thưởng không phải rác\n"
-        "Còn nếu nhân vật là một nhân vật tóc hồng (có cọng tóc thừa ra ngoài, trên đầu có phụ kiện màu vàng và xanh biển) thì bạn hãy kiểm tra xem đó có phải Bocchi trong anime/manga Bocchi The Rock không (hoặc trong tên file ảnh có chữ bocchi hoặc Gotoh Hitori) thì trả về kết quả là vợ của thằng Quangquy Nguyenvo"
+        "Còn nếu là nhân vật anime tóc hồng mắt xanh biển, có cài tóc màu vàng và xanh (hoặc trong tên file ảnh có chữ bocchi hoặc Gotoh Hitori) thì trả về kết quả là vợ của thằng Quangquy Nguyenvo"
     )
     contents = [prompt, resized_image]
     response = model.generate_content(contents)
