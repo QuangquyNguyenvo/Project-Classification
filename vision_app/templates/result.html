@@ -16,50 +16,17 @@
             padding: 0;
             overflow-x: hidden;
         }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 250px;
-            background-color: #1a1a29;
-            padding: 20px;
-            transition: transform 0.3s ease;
-            transform: translateX(0);
-            overflow-y: auto;
-            z-index: 1000;
-        }
-        .sidebar.closed {
-            transform: translateX(-250px);
-        }
-        .sidebar h2 {
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .sidebar a {
-            color: #c9d1d9;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1.25rem;
-        }
         .content-wrapper {
-            transition: margin-left 0.3s ease;
-            margin-left: 250px;
             padding: 20px;
-            width: calc(100% - 250px);
-        }
-        .content-wrapper.full-width {
-            margin-left: 0;
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .img-container img {
             max-width: 100%;
             height: auto;
             border-radius: 20px;
-            max-height: 360px; /* Ensuring the image fits well within the screen */
+            max-height: 360px;
         }
         .list-group-item {
             background-color: #2a2d3e;
@@ -76,89 +43,27 @@
             color: #c9d1d9;
             border-radius: 20px;
             width: 100%;
+            margin-bottom: 20px;
         }
         .btn-secondary, .btn-primary {
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
+            transition: all 0.3s ease;
         }
         .btn-secondary {
-            background-color: #2a2d3e;
+            background-color: #4a4e5b;
             color: #ffffff;
         }
         .btn-secondary:hover, .btn-secondary:focus {
-            background-color: #21262d;
+            background-color: #5a5e6b;
         }
         .btn-primary {
-            background-color: #007bff;
+            background-color: #3498db;
             color: #ffffff;
         }
         .btn-primary:hover, .btn-primary:focus {
-            background-color: #0056b3;
-        }
-        ::-webkit-scrollbar {
-            display: none;
-        }
-        @media (max-width: 768px) {
-            .content-wrapper {
-                margin-left: 0;
-                padding: 10px;
-                width: 100%;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            .list-group-item, .card {
-                width: 100%;
-            }
-        }
-        @media (max-width: 576px) {
-            .content-wrapper {
-                padding: 5px;
-            }
-            .img-container img {
-                width: 100%;
-            }
-        }
-        .toggle-btn {
-            position: fixed;
-            top: 50%;
-            left: 250px;
-            z-index: 1000;
-            background-color: #1a1a29;
-            color: #ffffff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: left 0.3s ease, transform 0.3s ease;
-            transform: translateY(-50%);
-        }
-        .toggle-btn.closed {
-            left: 0;
-            transform: translateY(-50%) rotate(180deg);
-        }
-        .sidebar.closed + .toggle-btn {
-            left: 0;
-        }
-        .sidebar.closed + .toggle-btn + .content-wrapper {
-            margin-left: 0;
-            width: 100%;
-        }
-        .progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: transparent;
-            z-index: 1100;
-        }
-        .progress-bar {
-            height: 5px;
-            background-color: #ff4757;
-            transition: width 0.1s linear;
+            background-color: #2980b9;
         }
         .card-header {
             background-color: #21262d;
@@ -167,14 +72,13 @@
         .card-body {
             background-color: #2a2d3e;
         }
-        /* New styles for the specific layout */
         .card-wrapper {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
-            align-items: stretch; /* Ensure equal height */
         }
         .card-wrapper .card {
-            width: 48%; /* Adjust width as needed */
+            width: 100%;
             margin-bottom: 20px;
         }
         .correction-options {
@@ -183,15 +87,12 @@
             padding: 10px;
             margin-top: 10px;
             display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            width: 100%;
             animation: slide-down 0.3s ease forwards;
         }
         .correction-options button {
-            display: block;
-            margin: 5px 0;
+            display: inline-block;
+            margin: 5px;
             padding: 8px 16px;
             border: none;
             background-color: #3a3e4b;
@@ -205,38 +106,65 @@
         }
         @keyframes slide-down {
             0% {
-                transform: translateX(-50%) translateY(-100%);
+                transform: translateY(-20px);
                 opacity: 0;
             }
             100% {
-                transform: translateX(-50%) translateY(0);
+                transform: translateY(0);
                 opacity: 1;
+            }
+        }
+        .feedback-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .feedback-buttons button {
+            font-size: 18px;
+            padding: 15px 30px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @media (min-width: 768px) {
+            .card-wrapper .card {
+                width: 48%;
+            }
+        }
+        @media (max-width: 767px) {
+            .feedback-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feedback-buttons button {
+                width: 80%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar" id="sidebar">
-        <h2>BiosenseAI</h2>
-        <a href="/"><i class="fas fa-home"></i> Home</a>
-        <a href="/result"><i class="fas fa-list"></i> Results</a>
-        <a href="/about"><i class="fas fa-info-circle"></i> About</a>
-    </div>
-    <button class="toggle-btn" id="toggle-btn"><i class="fas fa-arrow-left"></i></button>
     <div class="content-wrapper" id="content-wrapper">
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar" style="width: 100%;"></div>
-        </div>
-        
         <div class="card-wrapper">
-            <div class="card mt-4">
+            <div class="card">
                 <div class="card-header text-center">
                     <h5 class="card-title">Loại rác: <strong id="waste-type">{{ waste_type }}</strong></h5>
                 </div>
                 <div class="card-body text-center">
                     <p class="card-text mt-4">Kết quả có chính xác không?</p>
-                    <button id="correct-btn" class="btn btn-primary">Đúng</button>
-                    <button id="incorrect-btn" class="btn btn-secondary">Không</button>
+                    <div class="feedback-buttons">
+                        <button id="correct-btn" class="btn btn-primary">Đúng</button>
+                        <button id="incorrect-btn" class="btn btn-secondary">Không</button>
+                    </div>
                     <div id="correction-options" class="correction-options">
                         <p class="card-text">Chọn loại rác đúng:</p>
                         <button class="btn btn-secondary correction-option" data-type="Hữu cơ">Hữu cơ</button>
@@ -248,7 +176,7 @@
                 </div>
             </div>
             
-            <div class="card mt-4">
+            <div class="card">
                 <div class="card-header text-center">
                     <h5 class="card-title">Vật thể nhận diện được là:</h5>
                 </div>
@@ -264,7 +192,7 @@
             </div>
         </div>
         
-        <div class="card mt-4">
+        <div class="card">
             <div class="card-header text-center">
                 <h5 class="card-title">Hình ảnh</h5>
             </div>
@@ -276,43 +204,18 @@
                 </div>
             </div>
         </div>
-        
-        <div class="text-center mt-4">
-            <a href="/" class="btn btn-secondary">Tải ảnh khác lên</a>
-        </div>
     </div>
     <script>
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const contentWrapper = document.getElementById('content-wrapper');
-        const progressBar = document.getElementById('progress-bar');
         const correctBtn = document.getElementById('correct-btn');
         const incorrectBtn = document.getElementById('incorrect-btn');
         const correctionOptions = document.getElementById('correction-options');
         const wasteTypeDisplay = document.getElementById('waste-type');
-    
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('closed');
-            toggleBtn.classList.toggle('closed');
-            contentWrapper.classList.toggle('full-width');
-        });
-    
-        let width = 110;
-        let interval = setInterval(() => {
-            width -= 1;
-            progressBar.style.width = width + '%';
-            if (width <= 0) {
-                clearInterval(interval);
-                window.location.href = '/';
-            }
-        }, 90);
     
         correctBtn.addEventListener('click', () => {
             window.location.href = '/';
         });
     
         incorrectBtn.addEventListener('click', () => {
-            clearInterval(interval);
             correctionOptions.style.display = 'block';
         });
     
