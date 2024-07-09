@@ -179,6 +179,53 @@
             font-size: 14px;
             font-weight: bold;
         }
+        .correction-options {
+            background-color: #2a2d3e;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            display: none;
+            width: 100%;
+            animation: slide-down 0.3s ease forwards;
+        }
+
+        .correction-options button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px 15px;
+            border: none;
+            background-color: #3a3e4b;
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: left;
+        }
+
+        .correction-options button:hover {
+            background-color: #4a4e5b;
+        }
+
+        .color-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes slide-down {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -202,11 +249,16 @@
                     </div>
                     <div id="correction-options" class="correction-options">
                         <p class="card-text">Chọn loại rác đúng:</p>
-                        <button class="btn btn-secondary correction-option" data-type="Hữu cơ">Hữu cơ</button>
-                        <button class="btn btn-secondary correction-option" data-type="Vô cơ">Vô cơ</button>
-                        <button class="btn btn-secondary correction-option" data-type="Y tế">Y tế</button>
-                        <button class="btn btn-secondary correction-option" data-type="Linh kiện điện tử">Linh kiện điện tử</button>
-                        <button class="btn btn-secondary correction-option" data-type="Khác">Khác</button>
+                        <button class="btn btn-secondary correction-option" data-type="Hữu cơ" data-color="#ff6384">
+                            <span class="color-indicator"></span>Hữu cơ</button>
+                        <button class="btn btn-secondary correction-option" data-type="Vô cơ" data-color="#36a2eb">
+                            <span class="color-indicator"></span>Vô cơ</button>
+                        <button class="btn btn-secondary correction-option" data-type="Y tế" data-color="#ffce56">
+                            <span class="color-indicator"></span>Y tế</button>
+                        <button class="btn btn-secondary correction-option" data-type="Linh kiện điện tử" data-color="#4bc0c0">
+                            <span class="color-indicator"></span>Linh kiện điện tử</button>
+                        <button class="btn btn-secondary correction-option" data-type="Khác" data-color="#9966ff">
+                            <span class="color-indicator"></span>Khác</button>
                     </div>
                 </div>
             </div>
@@ -301,6 +353,27 @@
                 });
             });
         });
+        //
+        document.querySelectorAll('.correction-option').forEach(button => {
+        const color = button.getAttribute('data-color');
+        const colorIndicator = button.querySelector('.color-indicator');
+        colorIndicator.style.backgroundColor = color;
+        button.addEventListener('click', () => {
+            const selectedType = button.getAttribute('data-type');
+            wasteTypeDisplay.innerText = selectedType;
+            fetch('/update_result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `selected_waste_type=${selectedType}`
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/';
+                }
+            });
+        });
+    });
     </script>  
 </body>
 </html>
