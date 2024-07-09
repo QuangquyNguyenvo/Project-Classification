@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo cáo lỗi - BiosenseAI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');       
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e2f;
+            color: #c9d1d9;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: -280px;
+            width: 280px;
+            background-color: #1a1a29;
+            padding: 30px 20px;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h2 {   
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 500;
+            font-size: 24px;
+        }
+
+        .sidebar a {
+            color: #c9d1d9;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .sidebar a i {
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .sidebar a:hover {
+            background-color: #21262d;
+            transform: translateX(5px);
+        }
+
+        .content-wrapper {
+            min-height: 100vh;
+            padding: 40px;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper.sidebar-active {
+            margin-left: 280px;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: #1a1a29;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .toggle-btn:hover {
+            background-color: #21262d;
+            transform: scale(1.1);
+        }
+
+        .card {
+            background-color: #2a2d3e;
+            border: none;
+            border-radius: 20px;
+            color: #c9d1d9;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #21262d;
+            color: #ffffff;
+            border-bottom: none;
+            padding: 25px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            background-color: #21262d;
+            border: 2px solid #4d4d7e;
+            color: #c9d1d9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }   
+
+        .form-control:focus {
+            border-color: #4bc0c0;
+            box-shadow: 0 0 0 2px rgba(75, 192, 192, 0.25);
+            background-color: #21262d;
+            color: #c9d1d9;
+            outline: none;
+        }
+
+        .form-control option {
+            background-color: #21262d;
+            color: #c9d1d9;
+        }
+
+        .btn-custom {
+            background-color: #4bc0c0;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-custom:hover {
+            background-color: #45a9a9;
+            transform: translateY(-2px);
+        }
+
+        .btn-mic, .btn-clear {
+            background-color: #3a3f51;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-left: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-mic:hover, .btn-clear:hover {
+            background-color: #4bc0c0;
+            transform: scale(1.1);
+        }
+
+        .btn-mic i, .btn-clear i {
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 12px;
+            display: block;
+            color: #ffffff;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        select.form-control {
+            height: auto;
+            padding: 15px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c9d1d9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+
+        .thank-you-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .thank-you-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .thank-you-content {
+            background-color: #2a2d3e;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .thank-you-modal.active .thank-you-content {
+            transform: scale(1);
+        }
+
+        .thank-you-content h2 {
+            color: #4bc0c0;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 28px;
+        }
+
+        .thank-you-content p {
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .thank-you-content .btn-custom {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+            
+            .content-wrapper.sidebar-active {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <h2>BiosenseAI</h2>
+        <a href="/"><i class="fas fa-home"></i> Home</a>
+        <a href="/result"><i class="fas fa-list"></i> Results</a>
+        <a href="/report"><i class="fas fa-bug"></i> Báo cáo lỗi</a>
+        <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+    </div>
+    <button class="toggle-btn" id="toggle-btn"><i class="fas fa-bars"></i></button>
+    <div class="content-wrapper" id="content-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bug"></i> Báo cáo lỗi</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="report-form">
+                                <div class="form-group">
+                                    <label for="error-type">Loại lỗi:</label>
+                                    <select class="form-control" id="error-type" required>
+                                        <option value="">Chọn loại lỗi</option>
+                                        <option value="classification">Phân loại không chính xác</option>
+                                        <option value="image-upload">Lỗi tải ảnh lên</option>
+                                        <option value="webcam">Lỗi webcam</option>
+                                        <option value="ui">Lỗi giao diện người dùng</option>
+                                        <option value="other">Lỗi khác</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="error-description">Mô tả lỗi:</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" id="error-description" rows="4"></textarea>
+                                        <button type="button" class="btn-mic" id="start-record"><i class="fas fa-microphone"></i></button>
+                                        <button type="button" class="btn-clear" id="clear-text"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-custom">Gửi báo cáo</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="thank-you-modal" id="thank-you-modal">
+        <div class="thank-you-content">
+            <h2>Cảm ơn bạn!</h2>
+            <p>Chúng tôi đã nhận được báo cáo lỗi của bạn và sẽ xử lý sớm nhất có thể.</p>
+            <button class="btn btn-custom" id="return-home">Trở về trang chủ</button>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggle-btn');
+        const sidebar = document.getElementById('sidebar');
+        const contentWrapper = document.getElementById('content-wrapper');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            contentWrapper.classList.toggle('sidebar-active');
+        });
+
+        const reportForm = document.getElementById('report-form');
+        const thankYouModal = document.getElementById('thank-you-modal');
+        const returnHomeBtn = document.getElementById('return-home');
+
+        reportForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            thankYouModal.classList.add('active');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 5000);
+        });
+
+        returnHomeBtn.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+
+        // Speech-to-text functionality
+        const startRecord = document.getElementById('start-record');
+        const errorDescription = document.getElementById('error-description');
+        const clearText = document.getElementById('clear-text');
+
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'vi-VN';
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                errorDescription.value += transcript;
+            };
+            
+            startRecord.addEventListener('click', function() {
+                errorDescription.value = '';
+                recognition.start();
+                startRecord.disabled = true;
+                startRecord.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            });
+
+            recognition.onend = function() {
+                startRecord.disabled = false;
+                startRecord.innerHTML = '<i class="fas fa-microphone"></i>';
+            };
+        } else {
+            startRecord.style.display = 'none';
+            console.log('Speech recognition not supported');
+        }
+
+        clearText.addEventListener('click', function() {
+            errorDescription.value = '';
+        });
+    </script>
+</body>
+</html>
