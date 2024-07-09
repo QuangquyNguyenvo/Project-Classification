@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
+    <title>Cài đặt</title>
     <style>
         body {
             background-color: #2a2d3e;
@@ -37,44 +37,143 @@
         .settings-container button:hover {
             background-color: #3a3f44;
         }
+        .language-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .language-selector img {
+            width: 30px;
+            height: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .report-bug {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .report-bug i {
+            margin-right: 10px;
+        }
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #ffcc00;
+        }
+        #bug-report-form {
+            display: none;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="settings-container">
-        <h3>Settings</h3>
+        <h3>Cài đặt</h3>
+        
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <span>Ngôn ngữ:</span>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg" alt="Tiếng Việt" onclick="changeLanguage('vi')">
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="English" onclick="changeLanguage('en')">
+        </div>
         
         <!-- Notifications Settings -->
         <div class="setting-item">
             <label for="notifications">
                 <input type="checkbox" id="notifications" checked>
-                Enable Notifications
+                Bật thông báo
             </label>
         </div>
-
+        
         <!-- Performance Settings -->
         <div class="setting-item">
             <label for="animations">
                 <input type="checkbox" id="animations" checked>
-                Enable Animations
+                Bật hiệu ứng động
             </label>
         </div>
-
-        <!-- Support Settings -->
-        <div class="setting-item">
-            <label for="feedback">Send Feedback:</label>
-            <button id="feedback" onclick="alert('Feedback functionality not implemented yet')">Send Feedback</button>
+        
+        <!-- Report Bug -->
+        <div class="setting-item report-bug" onclick="showBugReport()">
+            <i class="fas fa-bug"></i>
+            <span>Báo cáo lỗi</span>
         </div>
         
+        <!-- Star Rating -->
+        <div class="setting-item">
+            <span>Đánh giá ứng dụng:</span>
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5"><label for="star5">&#9733;</label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
+                <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+            </div>
+        </div>
     </div>
+
+    <!-- Bug Report Form -->
+    <div id="bug-report-form" class="settings-container">
+        <h3>Báo cáo lỗi</h3>
+        <div class="setting-item">
+            <label for="bug-type">Loại lỗi:</label>
+            <select id="bug-type">
+                <option value="crash">Ứng dụng bị treo</option>
+                <option value="performance">Vấn đề hiệu suất</option>
+                <option value="ui">Lỗi giao diện</option>
+                <option value="feature">Lỗi tính năng</option>
+                <option value="other">Khác</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="bug-description">Mô tả lỗi:</label>
+            <textarea id="bug-description" rows="4"></textarea>
+        </div>
+        <button onclick="submitBugReport()">Gửi báo cáo</button>
+        <button onclick="hideBugReport()">Hủy</button>
+    </div>
+
     <script>
-        // Add any JavaScript needed for settings functionality
+        function changeLanguage(lang) {
+            alert('Đã chuyển sang ' + (lang === 'vi' ? 'Tiếng Việt' : 'Tiếng Anh'));
+        }
+
         document.getElementById('notifications').addEventListener('change', function() {
-            alert('Notifications ' + (this.checked ? 'enabled' : 'disabled'));
+            alert('Thông báo ' + (this.checked ? 'đã bật' : 'đã tắt'));
         });
 
         document.getElementById('animations').addEventListener('change', function() {
-            alert('Animations ' + (this.checked ? 'enabled' : 'disabled'));
+            alert('Hiệu ứng động ' + (this.checked ? 'đã bật' : 'đã tắt'));
         });
+
+        function showBugReport() {
+            document.querySelector('.settings-container').style.display = 'none';
+            document.getElementById('bug-report-form').style.display = 'block';
+        }
+
+        function hideBugReport() {
+            document.querySelector('.settings-container').style.display = 'block';
+            document.getElementById('bug-report-form').style.display = 'none';
+        }
+
+        function submitBugReport() {
+            alert('Báo cáo lỗi đã được gửi. Cảm ơn bạn!');
+            hideBugReport();
+        }
     </script>
 </body>
 </html>
