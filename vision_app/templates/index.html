@@ -14,6 +14,7 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            overflow-y: hidden;
         }
         .sidebar {
             position: fixed;
@@ -133,7 +134,7 @@
             color: #c9d1d9;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 20px;
-            height: 350px;
+            height: auto;
         }
         .card h3 {
             font-size: 18px;
@@ -150,11 +151,11 @@
         }
         .stats-section .card {
             flex: 1;
-            min-width: 250px;
+            min-width: auto;
         }
         #chart-container {
             width: 90%;
-            height: 280px;
+            height: 230px;
         }
         .toggle-btn {
             position: fixed;
@@ -419,4 +420,4 @@
         }
     </script>
 </body>
-</html>    
+</html>
