@@ -196,7 +196,7 @@
         }
         .progress-bar {
             width: 100%;
-            height: 100%;
+            height: 100%;   
             background-color: #3498db;
             transition: width 0.1s linear;
         }
@@ -221,6 +221,10 @@
                 padding: 0;
             }
         }
+        .question-text {
+            font-size: 20px; 
+            font-weight: bold; 
+        }
     </style>
 </head>
 <body>
@@ -237,7 +241,7 @@
                     <h5 class="card-title">Loại rác: <strong id="waste-type">{{ waste_type }}</strong></h5>
                 </div>
                 <div class="card-body text-center">
-                    <p class="card-text mt-4">Kết quả có chính xác không?</p>
+                    <p class="card-text mt-4 question-text">Kết quả có chính xác không?</p>
                     <div class="feedback-buttons">
                         <button id="correct-btn" class="btn btn-primary">Đúng</button>
                         <button id="incorrect-btn" class="btn btn-secondary">Không</button>
