@@ -7,260 +7,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #50e3c2;
-            --bg-color: #1e1e2f;
-            --card-bg: #2a2d3e;
-            --text-color: #c9d1d9;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body, html {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-        }
-        
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: none;
-            margin-bottom: 20px;
-        }
-        
-        .card.active {
-            display: block;
-        }
-        
-        h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 2em;
-            text-align: center;
-        }
-        
-        .highlight {
-            color: var(--secondary-color);
-            font-weight: bold;
-        }
-        
-        p {
-            margin-bottom: 15px;
-            font-size: 1.1em;
-            line-height: 1.8;
-        }
-        
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        li {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            font-size: 1.1em;
-        }
-        
-        li:before {
-            content: "\f00c";
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: var(--secondary-color);
-            margin-right: 15px;
-            font-size: 1.2em;
-        }
-        
-        .team-members {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        
-        .team-member {
-            text-align: center;
-            margin: 10px;
-            flex-basis: calc(50% - 40px);
-        }
-        
-        .team-member img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--secondary-color);
-            margin-bottom: 15px;
-        }
-        
-        .team-member h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 1.3em;
-        }
-        
-        .social-links {
-            margin-top: 15px;
-        }
-        
-        .social-links a {
-            color: var(--secondary-color);
-            margin: 0 10px;
-            font-size: 1.4em;
-            transition: color 0.3s ease;
-        }
-        .social-links a:hover {
-            color: var(--primary-color);
-        }
-        .navigation {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .nav-button {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .nav-button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .dots {
-            display: flex;
-            justify-content: center;
-            margin: 0 20px;
-        }
-        .dot {
-            height: 10px;
-            width: 10px;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-
-        .dot.active {
-            background-color: var(--secondary-color);
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: -280px;
-            width: 280px;
-            background-color: #1a1a29;
-            padding: 30px 20px;
-            overflow-y: auto;
-            z-index: 1000;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-
-        .sidebar.active {   
-            left: 0;
-        }
-
-        .sidebar h2 {   
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 40px;
-            font-weight: 500;
-            font-size: 24px;
-        }
-
-        .sidebar a {
-            color: #c9d1d9;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .sidebar a i {
-            font-size: 20px;
-            margin-right: 15px;
-        }
-
-        .sidebar a:hover {
-            background-color: #21262d;
-            transform: translateX(5px);
-        }
-
-        .content-wrapper {
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .content-wrapper.sidebar-active {
-            margin-left: 280px;
-        }
-
-        .toggle-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background-color: #1a1a29;
-            color: #ffffff;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .toggle-btn:hover {
-            background-color: #21262d;
-            transform: scale(1.1);
-        }
-
+        :root {--primary-color: #4a90e2; --secondary-color: #50e3c2; --bg-color: #1e1e2f; --card-bg: #2a2d3e; --text-color: #c9d1d9;}
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        body, html {font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; height: 100vh; overflow: hidden;}
+        .parallax-bg {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://source.unsplash.com/random/1920x1080?technology') no-repeat center center; background-size: cover; z-index: -1;}
+        .container {max-width: 1200px; height: 100vh; margin: 0 auto; padding: 50px; position: relative; overflow: hidden;}
+        .card-carousel {position: relative; width: 100%; height: 80vh; perspective: 1000px; transform-style: preserve-3d;}
+        .card {position: absolute; width: 60%; height: 100%; left: 20%; top: 0; background-color: rgba(42, 45, 62, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1); opacity: 0; transform: translateX(50%) scale(0.8); overflow: hidden;}
+        .card.active {opacity: 1; transform: translateX(0) scale(1); z-index: 2;}
+        .card.prev, .card.next {opacity: 0.7; z-index: 1;}
+        .card.prev {transform: translateX(-75%) scale(0.9);}
+        .card.next {transform: translateX(75%) scale(0.9);}
+        h2 {color: var(--primary-color); margin-bottom: 30px; font-size: 2.5em; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);}
+        .highlight {color: var(--secondary-color); font-weight: bold;}
+        p {margin-bottom: 20px; font-size: 1.2em; line-height: 1.8;}
+        ul {list-style-type: none; padding-left: 0;}
+        li {margin-bottom: 15px; display: flex; align-items: center; font-size: 1.1em;}
+        li:before {content: "\f00c"; font-family: 'Font Awesome 5 Free'; font-weight: 900; color: var(--secondary-color); margin-right: 15px; font-size: 1.2em;}
+        .team-members {display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;}
+        .team-member {text-align: center; margin: 10px; flex-basis: calc(50% - 20px);}
+        .team-member img {width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--secondary-color); margin-bottom: 10px;}
+        .team-member h3 {color: var(--primary-color); margin-bottom: 5px; font-size: 1.2em;}
+        .social-links {margin-top: 10px;}
+        .social-links a {color: var(--secondary-color); margin: 0 5px; font-size: 1.2em;}
+        .navigation {position: absolute; bottom: 40px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; z-index: 10;}
+        .nav-button {background-color: var(--primary-color); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 24px; display: flex; justify-content: center; align-items: center; transition: background-color 0.3s ease; margin: 0 20px;}
+        .nav-button:hover {background-color: var(--secondary-color);}
+        .progress-bar {position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 200px; height: 4px; background-color: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden;}
+        .progress {width: 0; height: 100%; background-color: var(--secondary-color); transition: width 0.3s linear;}
+        .sidebar {position: fixed; top: 0; bottom: 0; left: -280px; width: 280px; background-color: #1a1a29; padding: 30px 20px; overflow-y: auto; z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 2px 0 10px rgba(0,0,0,0.1);}
+        .sidebar.active {left: 0;}
+        .sidebar h2 {color: #ffffff; text-align: center; margin-bottom: 40px; font-weight: 500; font-size: 24px;}
+        .sidebar a {color: #c9d1d9; text-decoration: none; display: flex; align-items: center; padding: 15px; border-radius: 10px; font-size: 16px; margin-bottom: 15px; transition: background-color 0.3s ease;}
+        .sidebar a i {font-size: 20px; margin-right: 15px;}
+        .sidebar a:hover {background-color: #21262d;}
+        .content-wrapper {transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
+        .content-wrapper.sidebar-active {margin-left: 280px;}
+        .toggle-btn {position: fixed; top: 20px; left: 20px; z-index: 1001; background-color: #1a1a29; color: #ffffff; border: none; padding: 12px; border-radius: 10px; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
+        .toggle-btn:hover {background-color: #21262d;}
         @media (max-width: 768px) {
-            .content-wrapper {
-                padding: 20px;
-            }
-            .sidebar {
-                width: 100%;
-                left: -100%;
-            }
-            .content-wrapper.sidebar-active {
-                margin-left: 0;
-            }
+            .container {padding: 20px;}
+            .card {width: 90%; left: 5%;}
+            .card.prev, .card.next {display: none;}
+            .sidebar {width: 100%; left: -100%;}
+            .content-wrapper.sidebar-active {margin-left: 0;}
         }
     </style>
 </head>
 <body>
+    <div class="parallax-bg"></div>
     <div class="sidebar" id="sidebar">
         <h2>BiosenseAI</h2>
         <a href="/"><i class="fas fa-home"></i> Home</a>
@@ -271,126 +66,118 @@
     <button class="toggle-btn" id="toggle-btn"><i class="fas fa-bars"></i></button>
     <div class="content-wrapper" id="content-wrapper">
         <div class="container">
-            <div class="card active">
-                <h2><strong>BiosenseAI</strong>     là gì?</h2>
-                <p>
-                    <strong>BioSenseAI</strong> là một dự án mà bọn mình đã cùng ấp ủ từ rất lâu, với mong muốn góp phần giải quyết bài toán phân loại rác thải nan giải ở nước mình. Khác với những giải pháp còn đang loay hoay thử nghiệm, bọn mình tin rằng <strong>BioSenseAI</strong> có thể mang đến một giải pháp thực sự hiệu quả và bền vững.
-                    <br>
-                    Cái tên <strong>"BioSenseAI"</strong> nghe hơi "khoa học" một chút, nhưng nó cũng nói lên tất cả những gì bọn mình muốn làm: dùng AI để tạo ra một "con mắt sinh học" có khả năng phân loại rác chính xác hơn bao giờ hết.
-                </p>
-            </div>
-            <div class="card">
-                <h2>Tính Năng Nổi Bật</h2>
-                <ul>
-                    <li>Phân loại chính xác đa dạng loại rác thải</li>
-                    <li>Sử dụng thuật toán AI tiên tiến để nhận diện và phân loại   </li>
-                    <li>Hỗ trợ quá trình tái chế hiệu quả</li>
-                    <li>Giảm thiểu tác động tiêu cực đến môi trường</li>
-                    <li>Giao diện người dùng thân thiện, dễ sử dụng</li>
-                    <li>Cập nhật và học hỏi liên tục để cải thiện độ chính xác</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h2>Đội Ngũ Phát Triển</h2>
-                <p>Dù chỉ là hai đứa học sinh cấp 3 trường Chuyên Thoại Ngọc Hầu, bọn mình vẫn quyết tâm biến ý tưởng này thành hiện thực. Hy vọng BioSenseAI sẽ không chỉ là một dự án nhỏ của hai đứa, mà còn là một giải pháp thiết thực cho môi trường sống của chúng ta.</p>
-                <div class="team-members">
-                    <div class="team-member">
-                        <img src="{{ url_for('static', filename='avatar/quangquy.jpg') }}" alt="Nguyễn Võ Quang Quý">
-                        <h3>Nguyễn Võ Quang Quý</h3>
-                        <div class="social-links">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <div class="card-carousel">
+                <div class="card active">
+                    <h2><strong>BiosenseAI</strong> là gì?</h2>
+                    <p><strong class="highlight">BioSenseAI</strong> là một dự án mà tụi em đã cùng ấp ủ từ rất lâu, với mong muốn góp phần giải quyết bài toán phân loại rác thải nan giải ở nước mình. Khác với những giải pháp còn đang loay hoay thử nghiệm, tụi em tin rằng <strong class="highlight">BioSenseAI</strong> có thể mang đến một giải pháp thực sự hiệu quả và bền vững.</p>
+                    <p>Cái tên <strong class="highlight">"BioSenseAI"</strong> nghe hơi <span class="highlight">"khoa học"</span> một chút, nhưng nó cũng nói lên tất cả những gì tụi em muốn làm: dùng AI để tạo ra một <span class="highlight">"con mắt sinh học"</span> có khả năng phân loại rác chính xác hơn bao giờ hết.</p>
+                </div>
+                <div class="card">
+                    <h2>Tính Năng Nổi Bật</h2>
+                    <ul>
+                        <li>Phân loại chính xác đa dạng loại rác thải</li>
+                        <li>Sử dụng thuật toán AI tiên tiến để nhận diện và phân loại   </li>
+                        <li>Hỗ trợ quá trình tái chế hiệu quả</li>
+                        <li>Giảm thiểu tác động tiêu cực đến môi trường</li>
+                        <li>Giao diện người dùng thân thiện, dễ sử dụng</li>
+                        <li>Cập nhật và học hỏi liên tục để cải thiện độ chính xác</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h2>Đội Ngũ Phát Triển</h2>
+                    <p>Dù chỉ là hai đứa học sinh cấp 3 trường Chuyên Thoại Ngọc Hầu, tụi em vẫn quyết tâm biến ý tưởng này thành hiện thực. Hy vọng <strong class="highlight">BioSenseAI</strong> sẽ không chỉ là một dự án nhỏ của hai đứa, mà còn là một giải pháp thiết thực cho môi trường sống của chúng ta.</p>
+                    <div class="team-members">
+                        <div class="team-member">
+                            <img src="{{ url_for('static', filename='avatar/quangquy.jpg') }}" alt="Nguyễn Võ Quang Quý">
+                            <h3>Nguyễn Võ Quang Quý</h3>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-facebook"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="team-member">
-                        <img src="{{ url_for('static', filename='avatar/thiennhan.jpg') }}" alt="Nguyễn Thiện Nhân">
-                        <h3>Nguyễn Thiện Nhân</h3>
-                        <div class="social-links">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <div class="team-member">
+                            <img src="{{ url_for('static', filename='avatar/thiennhan.jpg') }}" alt="Nguyễn Thiện Nhân">
+                            <h3>Nguyễn Thiện Nhân</h3>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-facebook"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="navigation">
                 <button class="nav-button prev">&#10094;</button>
-                <div class="dots"></div>
                 <button class="nav-button next">&#10095;</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
             </div>
         </div>
     </div>
     <script>
         let slideIndex = 0;
         const cards = document.querySelectorAll('.card');
-        const dots = document.querySelector('.dots');
-        let slideInterval;
+        const progressBar = document.querySelector('.progress');
         let totalTime = 0;
-    
-        // Tạo mấy dấu chấm chuyển trang cho vui
-        cards.forEach((_, index) => {
-            const dot = document.createElement('span');
-            dot.classList.add('dot');
-            dot.addEventListener('click', () => currentSlide(index));
-            dots.appendChild(dot);
-        });
-    
+        const autoSlideTime = 10000;
+        let cycleCount = 0;
         function showSlides(n) {
             if (n >= cards.length) slideIndex = 0;
             if (n < 0) slideIndex = cards.length - 1;
-    
-            cards.forEach(card => card.classList.remove('active'));
-            document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
-    
-            cards[slideIndex].classList.add('active');
-            document.querySelectorAll('.dot')[slideIndex].classList.add('active');
+            cards.forEach((card, index) => {
+                card.classList.remove('active', 'prev', 'next');
+                if (index === slideIndex) card.classList.add('active');
+            });
+            updateProgressBar();
         }
-    
         function plusSlides(n) {
             showSlides(slideIndex += n);
             resetTimer();
         }
-    
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-            resetTimer();
-        }
-    
         function autoSlide() {
             plusSlides(1);
-            totalTime += 15 ;
-            
-            if (totalTime >= 60) {
-                clearInterval(slideInterval);
-                showSlides(slideIndex = 0); 
-                totalTime = 0;
-                startTimer(); 
+            cycleCount++;
+            if (cycleCount >= 4 * cards.length) {
+                window.location.href = '/';
             }
         }
-    
         function startTimer() {
-            slideInterval = setInterval(autoSlide, 15000); //15s tự chuyển cái card
+            setInterval(autoSlide, autoSlideTime);
         }
-    
         function resetTimer() {
-            clearInterval(slideInterval);
             totalTime = 0;
-            startTimer();
+            updateProgressBar();
         }
-    
+        function updateProgressBar() {
+            progressBar.style.width = `${(totalTime / autoSlideTime) * 100}%`;
+        }
         document.querySelector('.prev').addEventListener('click', () => plusSlides(-1));
         document.querySelector('.next').addEventListener('click', () => plusSlides(1));
-    
         showSlides(slideIndex);
         startTimer();
+        setInterval(() => {
+            totalTime += 100;
+            if (totalTime > autoSlideTime) totalTime = 0;
+            updateProgressBar();
+        }, 100);
 
+        // Sidebar 
         const toggleBtn = document.getElementById('toggle-btn');
         const sidebar = document.getElementById('sidebar');
         const contentWrapper = document.getElementById('content-wrapper');
+        
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('active');
             contentWrapper.classList.toggle('sidebar-active');
+        });
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                contentWrapper.classList.remove('sidebar-active');
+            }
         });
     </script>
 </body>
