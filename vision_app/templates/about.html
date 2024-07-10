@@ -15,9 +15,9 @@
         .card-carousel {position: relative; width: 100%; height: 80vh; perspective: 1000px; transform-style: preserve-3d;}
         .card {position: absolute; width: 60%; height: 100%; left: 20%; top: 0; background-color: rgba(42, 45, 62, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1); opacity: 0; transform: translateX(50%) scale(0.8); overflow: hidden;}
         .card.active {opacity: 1; transform: translateX(0) scale(1); z-index: 2;}
-        .card.prev, .card.next {opacity: 0.7; z-index: 1;}
-        .card.prev {transform: translateX(-75%) scale(0.9);}
-        .card.next {transform: translateX(75%) scale(0.9);}
+        .card.prev, .card.next {opacity: 0.5; z-index: 1; pointer-events: none;}
+        .card.prev {transform: translateX(-85%) scale(0.8);}
+        .card.next {transform: translateX(85%) scale(0.8);}
         h2 {color: var(--primary-color); margin-bottom: 30px; font-size: 2.5em; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);}
         .highlight {color: var(--secondary-color); font-weight: bold;}
         p {margin-bottom: 20px; font-size: 1.2em; line-height: 1.8;}
@@ -31,8 +31,8 @@
         .social-links {margin-top: 10px;}
         .social-links a {color: var(--secondary-color); margin: 0 5px; font-size: 1.2em;}
         .navigation {position: absolute; bottom: 40px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; z-index: 10;}
-        .nav-button {background-color: var(--primary-color); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 24px; display: flex; justify-content: center; align-items: center; transition: background-color 0.3s ease; margin: 0 20px;}
-        .nav-button:hover {background-color: var(--secondary-color);}
+        .nav-button {background-color: var(--primary-color); color: white; border: none; width: 50px; height: 50px; border-radius: 25px; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; margin: 0 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
+        .nav-button:hover {background-color: var(--secondary-color); transform: translateY(-2px); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);}
         .progress-bar {position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 200px; height: 4px; background-color: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden;}
         .progress {width: 0; height: 100%; background-color: var(--secondary-color); transition: width 0.3s linear;}
         .sidebar {position: fixed; top: 0; bottom: 0; left: -280px; width: 280px; background-color: #1a1a29; padding: 30px 20px; overflow-y: auto; z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 2px 0 10px rgba(0,0,0,0.1);}
@@ -118,67 +118,70 @@
         </div>
     </div>
     <script>
-        let slideIndex = 0;
-        const cards = document.querySelectorAll('.card');
-        const progressBar = document.querySelector('.progress');
-        let totalTime = 0;
-        const autoSlideTime = 10000;
-        let cycleCount = 0;
-        function showSlides(n) {
-            if (n >= cards.length) slideIndex = 0;
-            if (n < 0) slideIndex = cards.length - 1;
-            cards.forEach((card, index) => {
-                card.classList.remove('active', 'prev', 'next');
-                if (index === slideIndex) card.classList.add('active');
-            });
-            updateProgressBar();
+    let slideIndex = 0;
+    const cards = document.querySelectorAll('.card');
+    const progressBar = document.querySelector('.progress');
+    let totalTime = 0;
+    const autoSlideTime = 10000; 
+    let cycleCount = 0;
+    function showSlides(n) {
+        if (n >= cards.length) slideIndex = 0;
+        if (n < 0) slideIndex = cards.length - 1;
+        cards.forEach((card, index) => {
+            card.classList.remove('active', 'prev', 'next');
+            if (index === slideIndex) card.classList.add('active');
+            else if (index === (slideIndex - 1 + cards.length) % cards.length) card.classList.add('prev');
+            else if (index === (slideIndex + 1) % cards.length) card.classList.add('next');
+        });
+        updateProgressBar();
+    }
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+        resetTimer();
+    }
+    function autoSlide() {
+        plusSlides(1);
+        cycleCount++;
+        if (cycleCount >= 1+cards.length) {
+            window.location.href = '/';
         }
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-            resetTimer();
-        }
-        function autoSlide() {
-            plusSlides(1);
-            cycleCount++;
-            if (cycleCount >= 4 * cards.length) {
-                window.location.href = '/';
-            }
-        }
-        function startTimer() {
-            setInterval(autoSlide, autoSlideTime);
-        }
-        function resetTimer() {
+    }
+    function startTimer() {
+        setInterval(autoSlide, autoSlideTime);
+    }
+    function resetTimer() {
+        totalTime = 0;
+        updateProgressBar();
+    }
+    function updateProgressBar() {
+        progressBar.style.width = `${(totalTime / autoSlideTime) * 100}%`;
+    }
+    document.querySelector('.prev').addEventListener('click', () => plusSlides(-1));
+    document.querySelector('.next').addEventListener('click', () => plusSlides(1));
+    showSlides(slideIndex);
+    startTimer();
+    setInterval(() => {
+        totalTime += 100;
+        if (totalTime > autoSlideTime) {
             totalTime = 0;
-            updateProgressBar();
+            cycleCount++;
         }
-        function updateProgressBar() {
-            progressBar.style.width = `${(totalTime / autoSlideTime) * 100}%`;
-        }
-        document.querySelector('.prev').addEventListener('click', () => plusSlides(-1));
-        document.querySelector('.next').addEventListener('click', () => plusSlides(1));
-        showSlides(slideIndex);
-        startTimer();
-        setInterval(() => {
-            totalTime += 100;
-            if (totalTime > autoSlideTime) totalTime = 0;
-            updateProgressBar();
-        }, 100);
+        updateProgressBar();
+    }, 100);
 
-        // Sidebar 
-        const toggleBtn = document.getElementById('toggle-btn');
-        const sidebar = document.getElementById('sidebar');
-        const contentWrapper = document.getElementById('content-wrapper');
-        
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            contentWrapper.classList.toggle('sidebar-active');
-        });
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target) && sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-                contentWrapper.classList.remove('sidebar-active');
-            }
-        });
+    const toggleBtn = document.getElementById('toggle-btn');
+    const sidebar = document.getElementById('sidebar');
+    const contentWrapper = document.getElementById('content-wrapper');
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        contentWrapper.classList.toggle('sidebar-active');
+    });
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target) && sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            contentWrapper.classList.remove('sidebar-active');
+        }
+    });
     </script>
 </body>
 </html>
