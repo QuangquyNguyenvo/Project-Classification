@@ -76,7 +76,7 @@ def get_counters():
 def detect_labels_and_objects(path):
     model = genai.GenerativeModel('gemini-1.5-pro-001')
     image = Image.open(path)
-    resized_image = image.resize((640, 480))
+    resized_image = image.resize((320, 240))
     resized_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'modified_uploaded_image.jpg')
     resized_image.save(resized_image_path, 'png')
     prompt = (
