@@ -5,201 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            background-color: #1e1e2f;
-            color: #c9d1d9;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-y: hidden;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: -250px;
-            width: 250px;
-            background-color: #1a1a29;
-            padding: 20px;
-            overflow-y: auto;
-            z-index: 1000;
-            transition: left 0.2s ease;
-        }
-        .sidebar.active {
-            left: 0;
-        }
-        .sidebar h2 {
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .sidebar a {
-            color: #c9d1d9;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-        }
-        .sidebar a i {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-        .sidebar a:hover {
-            background-color: #21262d;
-        }
-        .content-wrapper {
-            margin-left: 0;
-            padding: 20px;
-            transition: margin-left 0.20s ease;
-        }
-        .content-wrapper.sidebar-active {
-            margin-left: 250px;
-        }
-        .dashboard-header {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .dashboard-header h1 {
-            font-size: 24px;
-            color: #ffffff;
-        }
-        .upload-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .upload-option {
-            flex: 1;
-            min-width: 250px;
-            background-color: #2a2d3e;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .upload-option i {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .drop-zone {
-            border: 2px dashed #4d4d7e;
-            border-radius: 10px;
-            padding: 20px;
-            cursor: pointer;
-        }
-        .drop-zone input {
-            display: none;
-        }
-        .drop-zone label {
-            font-size: 18px;
-            font-weight: bold;
-            color: #c9d1d9;
-            cursor: pointer;
-        }
-        .form-group input {
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #4d4d7e;
-            background-color: #21262d;
-            color: #c9d1d9;
-        }
-        .btn-custom {
-            background-color: #444b52;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px auto;
-            display: block;
-        }
-        .btn-custom:hover {
-            background-color: #3a3f44;
-        }
-        #captureBtn, #camera {
-            display: none;
-        }
-        .card {
-            background-color: #2a2d3e;
-            border: none;
-            border-radius: 10px;
-            color: #c9d1d9;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            height: auto;
-        }
-        .card h3 {
-            font-size: 18px;
-            color: #ffffff;
-            margin-bottom: 15px;
-        }
-        .card p {
-            font-size: 16px;
-        }
-        .stats-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .stats-section .card {
-            flex: 1;
-            min-width: auto;
-        }
-        #chart-container {
-            width: 90%;
-            height: 230px;
-        }
-        .toggle-btn {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1001;
-            background-color: #1a1a29;
-            color: #ffffff;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .success-count {
-            font-size: 48px;
-            font-weight: bold;
-            color: #4bc0c0;
-            margin: 20px 0;
-        }
-        .bin-status-title {
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        .bin-status {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-        .bin-status-item {
-            text-align: center;
-            flex: 1;
-        }
-        .status-indicator {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin: 0 auto 5px;
-        }
-        .status-full {
-            background-color: #ff6384;
-        }
-        .status-not-full {
-            background-color: #4bc0c0;
-        }
+        :root {--primary-color: #4a90e2; --secondary-color: #50e3c2; --bg-color: #1e1e2f; --card-bg: #2a2d3e; --text-color: #c9d1d9;}
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        body, html {font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; height: 100vh; overflow: hidden;}
+        .parallax-bg {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://source.unsplash.com/random/1920x1080?technology') no-repeat center center; background-size: cover; z-index: -1;}
+        .container {max-width: 1200px; height: 100vh; margin: 0 auto; padding: 50px; position: relative; overflow: hidden;}
+        .card-carousel {position: relative; width: 100%; height: 80vh; perspective: 1000px; transform-style: preserve-3d;}
+        .sidebar {position: fixed; top: 0; bottom: 0; left: -280px; width: 280px; background-color: #1a1a29; padding: 30px 20px; overflow-y: auto; z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 2px 0 10px rgba(0,0,0,0.1);}
+        .sidebar.active {left: 0;}
+        .sidebar h2 {color: #ffffff; text-align: center; margin-bottom: 40px; font-weight: 500; font-size: 24px;}
+        .sidebar a {color: #c9d1d9; text-decoration: none; display: flex; align-items: center; padding: 15px; border-radius: 10px; font-size: 16px; margin-bottom: 15px; transition: background-color 0.3s ease;}
+        .sidebar a i {font-size: 20px; margin-right: 15px;}
+        .sidebar a:hover {background-color: #21262d;}
+        .content-wrapper {transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
+        .content-wrapper.sidebar-active {margin-left: 280px;}
+        .toggle-btn {position: fixed; top: 20px; left: 20px; z-index: 1001; background-color: #1a1a29; color: #ffffff; border: none; padding: 12px; border-radius: 10px; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
+        .toggle-btn:hover {background-color: #21262d;}
+        .dashboard-header {margin-bottom: 20px; text-align: center;}
+        .dashboard-header h1 {font-size: 24px; color: #ffffff;}
+        .upload-section {display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;}
+        .upload-option {flex: 1; min-width: 250px; background-color: #2a2d3e; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;}
+        .upload-option i {font-size: 24px; margin-bottom: 10px;}
+        .drop-zone {border: 2px dashed #4d4d7e; border-radius: 10px; padding: 20px; cursor: pointer;}
+        .drop-zone input {display: none;}
+        .drop-zone label {font-size: 18px; font-weight: bold; color: #c9d1d9; cursor: pointer;}
+        .form-group input {width: 100%; margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #4d4d7e; background-color: #21262d; color: #c9d1d9;}
+        .btn-custom {background-color: #444b52; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 10px auto; display: block;}
+        .btn-custom:hover {background-color: #3a3f44;}
+        #captureBtn, #camera {display: none;}
+        .card {background-color: #2a2d3e; border: none; border-radius: 10px; color: #c9d1d9; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; height: auto;}
+        .card h3 {font-size: 18px; color: #ffffff; margin-bottom: 15px;}
+        .card p {font-size: 16px;}
+        .stats-section {display: flex; flex-wrap: wrap; gap: 20px;}
+        .stats-section .card {flex: 1; min-width: auto;}
+        #chart-container {width: 90%; height: 230px;}
+        .success-count {font-size: 48px; font-weight: bold; color: #4bc0c0; margin: 20px 0;}
+        .bin-status-title {margin-top: 20px; margin-bottom: 10px;}
+        .bin-status {display: flex; justify-content: space-between; margin-top: 10px;}
+        .bin-status-item {text-align: center; flex: 1;}
+        .status-indicator {width: 20px; height: 20px; border-radius: 50%; margin: 0 auto 5px;}
+        .status-full {background-color: #ff6384;}
+        .status-not-full {background-color: #4bc0c0;}
+        @media (max-width: 768px) {.container {padding: 20px;} .card {width: 90%; left: 5%;} .card.prev, .card.next {display: none;} .sidebar {width: 100%; left: -100%;} .content-wrapper.sidebar-active {margin-left: 0;}}
     </style>
 </head>
 <body>
