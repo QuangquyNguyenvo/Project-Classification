@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About BiosenseAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         :root {--primary-color: #4a90e2; --secondary-color: #50e3c2; --bg-color: #1e1e2f; --card-bg: #2a2d3e; --text-color: #c9d1d9;}
         * {margin: 0; padding: 0; box-sizing: border-box;}
@@ -45,13 +45,10 @@
         .content-wrapper.sidebar-active {margin-left: 280px;}
         .toggle-btn {position: fixed; top: 20px; left: 20px; z-index: 1001; background-color: #1a1a29; color: #ffffff; border: none; padding: 12px; border-radius: 10px; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
         .toggle-btn:hover {background-color: #21262d;}
-        @media (max-width: 768px) {
-            .container {padding: 20px;}
-            .card {width: 90%; left: 5%;}
-            .card.prev, .card.next {display: none;}
-            .sidebar {width: 100%; left: -100%;}
-            .content-wrapper.sidebar-active {margin-left: 0;}
-        }
+        @media (max-width: 1024px) { .container { padding: 30px; } .card { width: 80%; left: 10%; } }
+        @media (max-width: 768px) { .container { padding: 20px; } .card { width: 90%; left: 5%; } .card.prev, .card.next { display: none; } h2 { font-size: 2em; } p, li { font-size: 1em; } .team-member { flex-basis: 100%; } }
+        @media (max-height: 600px) { .container { height: auto; min-height: 100vh; } .card-carousel { height: auto; min-height: 80vh; } .card { height: auto; min-height: 80vh; overflow-y: auto; } .navigation { position: relative; bottom: auto; margin-top: 20px; } .progress-bar { position: relative; bottom: auto; margin-top: 10px; } }
+        @media (max-width: 480px) { .sidebar { width: 100%; left: -100%; } .content-wrapper.sidebar-active { margin-left: 0; } .toggle-btn { top: 10px; left: 10px; } }
     </style>
 </head>
 <body>
