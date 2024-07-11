@@ -30,7 +30,7 @@
         .correction-options button:hover { background-color: #4a4e5b; }
         .color-indicator { display: inline-block; width: 24px; height: 24px; border-radius: 50%; margin-right: 15px; vertical-align: middle; }
         @keyframes slide-down { 0% { transform: translateY(-20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        .feedback-buttons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .feedback-buttons { display: flex; justify-content: center; gap: 20px; }
         .feedback-buttons button { font-size: 18px; padding: 15px 30px; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         .progress-container { position: fixed; top: 0; left: 0; width: 100%; z-index: 1100; }
@@ -61,7 +61,7 @@
                         <button id="incorrect-btn" class="btn btn-secondary">Không</button>
                     </div>
                     <div id="correction-options" class="correction-options">
-                        <p class="card-text">Chọn loại rác đúng:</p>
+                        <p class="card-text" style="margin-top: -10px">Chọn loại rác đúng:</p>
                         <button class="btn btn-secondary correction-option" data-type="Hữu cơ" data-color="#ff6384">
                             <span class="color-indicator"></span>Hữu cơ</button>
                         <button class="btn btn-secondary correction-option" data-type="Vô cơ" data-color="#36a2eb">
