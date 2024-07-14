@@ -81,7 +81,7 @@ def detect_labels_and_objects(path):
     resized_image.save(resized_image_path, 'png')
     prompt = (
         "nhận diện hình ảnh sau và trả lời thẳng ra câu hỏi sau:\n"
-        "1. Đây là hình ảnh của vật thể gì? (nhớ trả về tên vật liệu, nếu không phải là hữu cơ thì tên vật liệu + loại chất liệu (nhựa, kim loại, thuỷ tinh,...))\n"
+        "1. Đây là hình ảnh của vật thể gì? (nhớ trả về tên vật liệu, nếu không phải là hữu cơ thì tên vật liệu + loại chất liệu (nhựa, kim loại, thuỷ tinh,...) + tên hãng nếu có thể)\n"
         "2. Mô tả chất liệu nhớ phân tích cấu tạo tổng quát của nó thuộc loại rác nào?: Hữu cơ , Vô cơ , Y tế , Linh kiện điện tử. nếu vẫn không có kết quả thì trả về là Khác (nếu là hữu cơ thì xem bao bì của nó là hữu cơ hay vô cơ, ví dụ bịch sữa chua túi bằng chất liệu vô cơ thì kết quả là vô cơ). Nếu là người thì ghi thêm mô tả đặc điểm của người đó\n"
         "kết quả được đưa về dưới dạng Python với từ khoá 'objects', 'waste_type'.\n"
         "ví dụ nếu là chai nhựa thì trả về là Chai nhựa chứ không phải là ['Chai Nhựa'], đừng trả lời dư ra dấu ['']\n"
