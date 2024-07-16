@@ -49,6 +49,8 @@
         .status-indicator {width: 20px; height: 20px; border-radius: 50%; margin: 0 auto 5px;}
         .status-full {background-color: #ff6384;}
         .status-not-full {background-color: #4bc0c0;}
+        .loading-overlay {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1001;}
+        .spinner-border {width: 3rem; height: 3rem; border-width: 0.3em;}
         @media (max-width: 768px) {.container {padding: 20px;} .card {width: 90%; left: 5%;} .card.prev, .card.next {display: none;} .sidebar {width: 100%; left: -100%;} .content-wrapper.sidebar-active {margin-left: 0;}}
     </style>
 </head>
@@ -131,22 +133,30 @@
             </div>
         </div>
     </div>
-
+    <div id="loading" class="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>    
     <script>
         document.getElementById('useWebcam').addEventListener('click', async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { width: { ideal: 320 }, height: { ideal: 240 } }
+            });
             const video = document.getElementById('camera');
             video.srcObject = stream;
             video.style.display = 'block';
             document.getElementById('captureBtn').style.display = 'block';
         });
-
         document.getElementById('captureBtn').addEventListener('click', () => {
             const video = document.getElementById('camera');
             const canvas = document.getElementById('canvas');
+            const loadingOverlay = document.getElementById('loading');
+            loadingOverlay.style.display = 'flex';
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0);
             canvas.toBlob((blob) => {
                 const formData = new FormData();
                 formData.append('webcam_image', blob, 'webcam_image.jpg');
@@ -157,6 +167,13 @@
                     if (response.redirected) {
                         window.location.href = response.url;
                     }
+                }).finally(() => {
+                    loadingOverlay.style.display = 'none';
+                    const stream = video.srcObject;
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                    video.srcObject = null;
                 });
             }, 'image/jpeg');
         });
@@ -167,11 +184,11 @@
         const uploadForm = document.getElementById('upload-form');
         const urlSubmit = document.getElementById('url-submit');
         const urlInput = document.getElementById('url-input');
-
+    
         dropZone.addEventListener('dragover', (event) => {
             event.preventDefault();
         });
-
+    
         dropZone.addEventListener('drop', (event) => {
             event.preventDefault();
             const files = event.dataTransfer.files;
@@ -181,33 +198,33 @@
                 uploadForm.submit();
             }
         });
-
+    
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
                 updateDropZone(fileInput.files[0]);
                 uploadForm.submit();
             }
         });
-
+    
         urlSubmit.addEventListener('click', () => {
             if (urlInput.value.trim() !== "") {
                 uploadForm.submit();
             }
         });
-
+    
         function updateDropZone(file) {
             fileLabel.textContent = file.name;
         }
-
+    
         const toggleBtn = document.getElementById('toggle-btn');
         const sidebar = document.getElementById('sidebar');
         const contentWrapper = document.getElementById('content-wrapper');
-
+    
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('active');
             contentWrapper.classList.toggle('sidebar-active');
         });
-
+    
         const ctx = document.getElementById('wasteChart').getContext('2d');
         const wasteChart = new Chart(ctx, {
             type: 'pie',
@@ -236,7 +253,7 @@
                 }
             }
         });
-
+    
         function updateChartData(counters) {
             wasteChart.data.datasets[0].data = [
                 counters['Hữu cơ'],
@@ -247,20 +264,19 @@
             ];
             wasteChart.update();
         }
-
+    
         fetch('/get_counters')
             .then(response => response.json())
             .then(data => {
                 updateChartData(data.counters);
                 updateBinStatus(data.bin_status);
             });
-
+    
         function updateBinStatus(binStatus) {
             const statusIndicators = document.querySelectorAll('.status-indicator');
             Object.keys(binStatus).forEach((key, index) => {
                 if (binStatus[key]) {
                     statusIndicators[index].classList.remove('status-not-full');
-                    statusIndicators
                     statusIndicators[index].classList.add('status-full');
                 } else {
                     statusIndicators[index].classList.remove('status-full');
@@ -268,6 +284,6 @@
                 }
             });
         }
-    </script>
+    </script>    
 </body>
 </html>
