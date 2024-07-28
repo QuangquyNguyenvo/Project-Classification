@@ -79,20 +79,8 @@ def detect_labels_and_objects(path):
     resized_image = image.resize((320, 240))
     resized_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'modified_uploaded_image.jpg')
     resized_image.save(resized_image_path, 'png')
-    prompt = (
-        "nhận diện hình ảnh sau và trả lời thẳng ra câu hỏi sau:\n"
-        "1. Đây là hình ảnh của vật thể gì? (nhớ trả về tên vật liệu, nếu không phải là hữu cơ thì tên vật liệu + loại chất liệu (nhựa, kim loại, thuỷ tinh,...) + tên hãng nếu có thể)\n"
-        "2. Mô tả chất liệu nhớ phân tích cấu tạo tổng quát của nó thuộc loại rác nào?: Hữu cơ , Vô cơ , Y tế , Linh kiện điện tử. nếu vẫn không có kết quả thì trả về là Khác (nếu là hữu cơ thì xem bao bì của nó là hữu cơ hay vô cơ, ví dụ bịch sữa chua túi bằng chất liệu vô cơ thì kết quả là vô cơ). Nếu là người thì ghi thêm mô tả đặc điểm của người đó\n"
-        "kết quả được đưa về dưới dạng Python với từ khoá 'objects', 'waste_type'.\n"
-        "ví dụ nếu là chai nhựa thì trả về là Chai nhựa chứ không phải là ['Chai Nhựa'], đừng trả lời dư ra dấu ['']\n"
-        "Nếu kết quả trả về là một loại thức ăn có vỏ ngoài (thì kết quả trả về là tên + chất liệu vỏ ngoài, ví dụ sữa chua túi nhựa, khoai tây chiên vỏ giấy,...) là vô cơ thì trả về kết quả là vô cơ"
-        "Nếu kết quả trả về là tên vật phẩm + chất liệu thì loại rác sẽ là loại rác của chất liệu đó (ví dụ như mô hình gỗ thì gỗ là loại rác hữu cơ, bình kim loại thì kim loại ở đây là loại rác vô cơ)"
-        "Nếu nó không phải hữu cơ thì hãy kiểm tra xem nó có cấu tạo từ chất liệu vô cơ như(kim loại, thuỷ tinh, nhựa,...) không"
-        "Nếu kết quả nhận được là một nhân vật nữ anime tóc hồng (trên tóc có cài tóc màu vàng, đeo khuyên tai màu vàng), là một nhân vật trong Wuthering Waves (hoặc trong tên file có chữ encore) thì trả về (object: Vợ của Nguyễn Nhân lolicon) (waste_type: Không phải rác đây là Waifu)\n"
-        "Nếu kết quả nhận được là một nhân vật hoạt hình/ anime nữ thì hãy trả về (object: Gái alimi) (waste_type: Không phải rác đây là Alime)\n"
-        "Nếu kết quả nhận được là một chiếc balo có màu xanh dương đậm, mặt trước có logo màu trắng kèm chữ tỉnh an giang thì trả về kết quả là: Balo trường THPT Chuyên Thoại Ngọc Hầu, và loại rác trả về là Đây là phần thưởng không phải rác\n"
-        "Còn nếu là nhân vật anime tóc hồng mắt xanh biển, có cài tóc màu vàng và xanh (hoặc trong tên file ảnh có chữ bocchi hoặc Gotoh Hitori) thì trả về (object: Vợ của Quangquy Nguyenvo) (waste_type: Không phải rác đây là Waifu)"
-    )
+    prompt_file_path = os.path.join(os.path.dirname(__file__), 'static', 'test', 'tomtat.txt')
+    with open(prompt_file_path, "r", encoding="utf-8") as file: prompt= file.read()
     contents = [prompt, resized_image]
     response = model.generate_content(contents)
     try:
