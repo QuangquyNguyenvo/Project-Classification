@@ -78,7 +78,7 @@ def detect_labels_and_objects(path):
     resized_image = image.resize((320, 240))
     resized_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'modified_uploaded_image.jpg')
     resized_image.save(resized_image_path, 'png')
-    prompt_file_path = os.path.join(os.path.dirname(__file__), 'static', 'test', 'tomtat.txt')
+    prompt_file_path = os.path.join(os.path.dirname(__file__), 'static', 'temp', 'temp_prompt_test.txt')
     with open(prompt_file_path, "r", encoding="utf-8") as file: prompt= file.read()
     contents = [prompt, resized_image]
     response = model.generate_content(contents)
