@@ -14,8 +14,7 @@ counters = {
     'Hữu cơ': 0,
     'Vô cơ': 0,
     'Y tế': 0,
-    'Linh kiện điện tử': 0,
-    'Khác': 0
+    'Linh kiện điện tử': 0
 }
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -44,7 +43,7 @@ def index():
             return render_template('index.html', counters=counters)
         
         result, modified_image_path = detect_labels_and_objects(filepath)
-        waste_type = result['waste_type'] or 'Khác'
+        waste_type = result['waste_type'] or 'Không xác định'
         counters['successful_classifications'] += 1
         counters[waste_type] = counters.get(waste_type, 0) + 1
         
