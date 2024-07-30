@@ -116,10 +116,6 @@
                             <div class="status-indicator status-not-full"></div>
                             <span>Linh kiện điện tử</span>
                         </div>
-                        <div class="bin-status-item">
-                            <div class="status-indicator status-not-full"></div>
-                            <span>Khác</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -229,11 +225,11 @@
         const wasteChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Hữu cơ', 'Vô cơ', 'Y tế', 'Linh kiện điện tử', 'Khác'],
+                labels: ['Hữu cơ', 'Vô cơ', 'Y tế', 'Linh kiện điện tử'],
                 datasets: [{
-                    data: [0, 0, 0, 0, 0],
-                    backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff'],
-                    hoverBackgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+                    data: [0, 0, 0, 0],
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0'],
+                    hoverBackgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0']
                 }]
             },
             options: {
@@ -259,8 +255,7 @@
                 counters['Hữu cơ'],
                 counters['Vô cơ'],
                 counters['Y tế'],
-                counters['Linh kiện điện tử'],
-                counters['Khác']
+                counters['Linh kiện điện tử']
             ];
             wasteChart.update();
         }
